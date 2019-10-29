@@ -13,3 +13,5 @@ app.listen(PORT, () => {
   console.log(`\n[App] Using environment "${mode}".`)
   console.log(`[App] App is running on ${HOST}:${PORT}`)
 })
+
+require('./routes/index.js')(app)
