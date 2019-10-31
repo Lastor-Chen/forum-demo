@@ -23,5 +23,18 @@ module.exports = {
         res.redirect('signin')
       })
       .catch(err => res.status(422).json(err))
-  }
+  },
+
+  signInPage: (req, res) => res.render('signin'),
+
+  signIn: (req, res) => {
+    req.flash('success', '成功登入')
+    res.redirect('/restaurants')
+  },
+
+  logout: (req, res) => {
+    req.flash('success', '登出成功')
+    req.logout()
+    res.redirect('signin')
+  } 
 }

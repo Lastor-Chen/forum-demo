@@ -2,6 +2,7 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const flash = require('connect-flash')
 const session = require('express-session')
+const passport = require('./config/passport.js')
 const db = require('./models')
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -15,6 +16,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(flash())
 
 app.use((req, res, next) => {
@@ -31,4 +34,4 @@ app.listen(PORT, () => {
   console.log(`[App] App is running on ${HOST}:${PORT}`)
 })
 
-require('./routes/index.js')(app)
+require('./routes/index.js')(app, passport)
