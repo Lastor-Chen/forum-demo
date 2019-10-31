@@ -7,6 +7,7 @@ const HOST = process.env.HOSTNAME || 'localhost'
 
 app.engine('hbs', exphbs({ extname: 'hbs' }))
 app.set('view engine', 'hbs')
+app.use(express.urlencoded({ extended: true }))
 
 // ==============================
 app.listen(PORT, () => {
