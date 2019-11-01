@@ -1,5 +1,11 @@
+const Restaurant = require('../models').Restaurant
+
 module.exports = {
   getRestaurants: (req, res) => {
-    res.render('admin/restaurants')
+    Restaurant.findAll()
+      .then(restaurants => {
+        res.render('admin/restaurants', { restaurants })
+      })
+      .catch(err => res.status(422).json(err))
   }
 }
