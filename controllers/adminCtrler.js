@@ -57,5 +57,15 @@ module.exports = {
         .catch(err => res.status(422).json(err))
     }
     catch (err) { res.status(422).json(err) }
+  },
+
+  deleteRestaurant: (req, res) => {
+    Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        restaurant.destroy()
+          .then(restaurant => res.redirect('/admin/restaurants'))
+          .catch(err => res.status(422).json(err))
+      })
+      .catch(err => res.status(422).json(err))
   }
 }
