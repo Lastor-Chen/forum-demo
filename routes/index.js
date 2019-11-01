@@ -2,12 +2,23 @@ const restCtrler = require('../controllers/restCtrler.js')
 const adminCtrler = require('../controllers/adminCtrler.js')
 const userCtrler = require('../controllers/userCtrler.js')
 
-module.exports = (app, passport) => {
-  app.get('/', (req, res) => res.redirect('/restaurants'))
-  app.get('/restaurants', restCtrler.getRestaurants)
+function isAuthed(req, res, next) {
+  if (!req.isAuthenticated()) return res.redirect('/signin')
+  next()
+}
+function isAuthedAdmin(req, res, next) {
+  if (!req.isAuthenticated()) return res.redirect('/signin')
 
-  app.get('/admin', (req, res) => res.redirect('/admin/restaurants'))
-  app.get('/admin/restaurants', adminCtrler.getRestaurants)
+  if (req.user.isAdmin) return next()
+  res.redirect('/restaurants')
+}
+
+module.exports = (app, passport) => {
+  app.get('/', isAuthed, (req, res) => res.redirect('/restaurants'))
+  app.get('/restaurants', isAuthed, restCtrler.getRestaurants)
+
+  app.get('/admin', isAuthedAdmin, (req, res) => res.redirect('/admin/restaurants'))
+  app.get('/admin/restaurants', isAuthedAdmin, adminCtrler.getRestaurants)
 
   app.get('/signup', userCtrler.signUpPage)
   app.post('/signup', userCtrler.signUp)
