@@ -30,5 +30,32 @@ module.exports = {
     Restaurant.findByPk(req.params.id)
       .then(restaurant => res.render('admin/restaurant', { restaurant }))
       .catch(err => res.status(422).json(err))
+  },
+
+  editRestaurant: (req, res) => {
+    Restaurant.findByPk(req.params.id)
+      .then(restaurant => res.render('admin/create', { restaurant }))
+      .catch(err => res.status(422).json(err))
+  },
+
+  putRestaurant: async (req, res) => {
+    if (!req.body.name) {
+      req.flash('error', "name didn't exist")
+      return res.redirect('back')
+    }
+
+    const input = req.body
+    let restaurant = {}
+    try { 
+      restaurant = await Restaurant.findByPk(req.params.id)
+
+      restaurant.update(input)
+        .then(restaurant => {
+          req.flash('success', 'restaurant was successfully created')
+          res.redirect('/admin/restaurants')
+        })
+        .catch(err => res.status(422).json(err))
+    }
+    catch (err) { res.status(422).json(err) }
   }
 }
