@@ -27,9 +27,23 @@ module.exports = {
 
   signInPage: (req, res) => res.render('signin'),
 
-  signIn: (req, res) => {
-    req.flash('success', '成功登入')
-    res.redirect('/restaurants')
+  signIn: (passport, req, res, next) => {
+    const option = {
+      badRequestMessage: '請輸入 Email 與 Password' 
+    }
+    passport.authenticate('local', option, (err, user, info) => {
+      if (err) return res.json(err)
+
+      const email = req.body.email
+      const msg = info.message
+      if (!user) return res.render('signin', { email, error: msg })
+
+      req.logIn(user, err => {
+        if (err) return res.json(err)
+        req.flash('success', msg)
+        res.redirect('/restaurants')
+      })
+    })(req, res, next)
   },
 
   logout: (req, res) => {

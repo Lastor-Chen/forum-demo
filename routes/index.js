@@ -13,9 +13,6 @@ module.exports = (app, passport) => {
   app.post('/signup', userCtrler.signUp)
 
   app.get('/signin', userCtrler.signInPage)
-  app.post('/signin', passport.authenticate('local', {
-    failureRedirect: '/signin',
-    failureFlash: true
-  }), userCtrler.signIn)
+  app.post('/signin', userCtrler.signIn.bind(null, passport))
   app.get('/logout', userCtrler.logout)
 }
