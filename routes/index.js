@@ -21,6 +21,7 @@ module.exports = (app, passport) => {
   app.get('/admin/restaurants', isAuthedAdmin, adminCtrler.getRestaurants)
   app.get('/admin/restaurants/create', isAuthedAdmin, adminCtrler.createRestaurants)
   app.post('/admin/restaurants', isAuthedAdmin, adminCtrler.postRestaurants)
+  app.get('/admin/restaurants/:id', isAuthedAdmin, adminCtrler.getRestaurant)
 
   app.get('/signup', userCtrler.signUpPage)
   app.post('/signup', userCtrler.signUp)

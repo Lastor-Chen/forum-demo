@@ -24,5 +24,11 @@ module.exports = {
         res.redirect('/admin/restaurants')
       })
       .catch(err => res.status(422).json(err))
+  },
+
+  getRestaurant: (req, res) => {
+    Restaurant.findByPk(req.params.id)
+      .then(restaurant => res.render('admin/restaurant', { restaurant }))
+      .catch(err => res.status(422).json(err))
   }
 }
