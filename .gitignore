@@ -8,6 +8,8 @@ ehthumbs.db
 Desktop.ini
 # Node.js & npm
 /node_modules
+/temp
+/upload
 .env
 package-lock.json
 *.log

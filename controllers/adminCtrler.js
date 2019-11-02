@@ -1,4 +1,5 @@
 const Restaurant = require('../models').Restaurant
+const fs = require('fs')
 
 module.exports = {
   getRestaurants: (req, res) => {
@@ -18,6 +19,16 @@ module.exports = {
     }
 
     const input = req.body
+    const { file } = req
+
+    if (file) {
+      const uploadPath = `upload/${file.originalname}`
+      input.image = '/' + uploadPath
+
+      const data = fs.readFileSync(file.path)
+      fs.writeFileSync(uploadPath, data)
+    } 
+    
     Restaurant.create(input)
       .then(restaurant => {
         req.flash('success', 'restaurant was successfully created')
@@ -45,9 +56,17 @@ module.exports = {
     }
 
     const input = req.body
-    let restaurant = {}
+    const { file } = req
+    if (file) {
+      const uploadPath = `upload/${file.originalname}`
+      input.image = '/' + uploadPath
+
+      const data = fs.readFileSync(file.path)
+      fs.writeFileSync(uploadPath, data)
+    } 
+
     try { 
-      restaurant = await Restaurant.findByPk(req.params.id)
+      const restaurant = await Restaurant.findByPk(req.params.id)
 
       restaurant.update(input)
         .then(restaurant => {

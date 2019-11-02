@@ -1,6 +1,8 @@
 const restCtrler = require('../controllers/restCtrler.js')
 const adminCtrler = require('../controllers/adminCtrler.js')
 const userCtrler = require('../controllers/userCtrler.js')
+const multer = require('multer')
+const upload = multer({ dest: 'temp/' })
 
 function isAuthed(req, res, next) {
   if (!req.isAuthenticated()) return res.redirect('/signin')
@@ -20,10 +22,10 @@ module.exports = (app, passport) => {
   app.get('/admin', isAuthedAdmin, (req, res) => res.redirect('/admin/restaurants'))
   app.get('/admin/restaurants', isAuthedAdmin, adminCtrler.getRestaurants)
   app.get('/admin/restaurants/create', isAuthedAdmin, adminCtrler.createRestaurants)
-  app.post('/admin/restaurants', isAuthedAdmin, adminCtrler.postRestaurants)
+  app.post('/admin/restaurants', isAuthedAdmin, upload.single('image'), adminCtrler.postRestaurants)
   app.get('/admin/restaurants/:id', isAuthedAdmin, adminCtrler.getRestaurant)
   app.get('/admin/restaurants/:id/edit', isAuthedAdmin, adminCtrler.editRestaurant)
-  app.put('/admin/restaurants/:id', isAuthedAdmin, adminCtrler.putRestaurant)
+  app.put('/admin/restaurants/:id', isAuthedAdmin, upload.single('image'), adminCtrler.putRestaurant)
   app.delete('/admin/restaurants/:id', isAuthedAdmin, adminCtrler.deleteRestaurant)
 
   app.get('/signup', userCtrler.signUpPage)
