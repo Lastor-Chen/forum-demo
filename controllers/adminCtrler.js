@@ -73,7 +73,7 @@ module.exports = {
 
       restaurant.update(input)
         .then(restaurant => {
-          req.flash('success', 'restaurant was successfully created')
+          req.flash('success', 'restaurant was successfully updated')
           res.redirect('/admin/restaurants')
         })
         .catch(err => res.status(422).json(err))
