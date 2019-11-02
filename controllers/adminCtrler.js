@@ -1,5 +1,4 @@
 const Restaurant = require('../models').Restaurant
-const fs = require('fs')
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
