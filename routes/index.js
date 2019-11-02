@@ -4,29 +4,22 @@ const userCtrler = require('../controllers/userCtrler.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
-function isAuthed(req, res, next) {
-  if (!req.isAuthenticated()) return res.redirect('/signin')
-  next()
-}
-function isAuthedAdmin(req, res, next) {
-  if (!req.isAuthenticated()) return res.redirect('/signin')
-
-  if (req.user.isAdmin) return next()
-  res.redirect('/restaurants')
-}
+// custom module
+const { isAuthed, isAuthedAdmin } = require('../lib/isAuth.js')
 
 module.exports = (app, passport) => {
   app.get('/', isAuthed, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', isAuthed, restCtrler.getRestaurants)
 
-  app.get('/admin', isAuthedAdmin, (req, res) => res.redirect('/admin/restaurants'))
-  app.get('/admin/restaurants', isAuthedAdmin, adminCtrler.getRestaurants)
-  app.get('/admin/restaurants/create', isAuthedAdmin, adminCtrler.createRestaurants)
-  app.post('/admin/restaurants', isAuthedAdmin, upload.single('image'), adminCtrler.postRestaurants)
-  app.get('/admin/restaurants/:id', isAuthedAdmin, adminCtrler.getRestaurant)
-  app.get('/admin/restaurants/:id/edit', isAuthedAdmin, adminCtrler.editRestaurant)
-  app.put('/admin/restaurants/:id', isAuthedAdmin, upload.single('image'), adminCtrler.putRestaurant)
-  app.delete('/admin/restaurants/:id', isAuthedAdmin, adminCtrler.deleteRestaurant)
+  app.use('/admin', isAuthedAdmin)
+  app.get('/admin', (req, res) => res.redirect('/admin/restaurants'))
+  app.get('/admin/restaurants', adminCtrler.getRestaurants)
+  app.get('/admin/restaurants/create', adminCtrler.createRestaurants)
+  app.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurants)
+  app.get('/admin/restaurants/:id', adminCtrler.getRestaurant)
+  app.get('/admin/restaurants/:id/edit', adminCtrler.editRestaurant)
+  app.put('/admin/restaurants/:id', upload.single('image'), adminCtrler.putRestaurant)
+  app.delete('/admin/restaurants/:id', adminCtrler.deleteRestaurant)
 
   app.get('/signup', userCtrler.signUpPage)
   app.post('/signup', userCtrler.signUp)
