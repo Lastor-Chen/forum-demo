@@ -1,4 +1,5 @@
 const Restaurant = require('../models').Restaurant
+const User = require('../models').User
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -89,5 +90,23 @@ module.exports = {
           .catch(err => res.status(422).json(err))
       })
       .catch(err => res.status(422).json(err))
+  },
+
+  editUsers: (req, res) => {
+    User.findAll({ order: [['id', 'ASC']] })
+      .then(users => res.render('admin/users', { users }))
+      .catch(err => res.status(422).json(err))
+  },
+
+  putUsers: async (req ,res) => {
+    try {
+      const user = await User.findByPk(req.params.id)
+      user.isAdmin = !user.isAdmin
+
+      await user.save()
+      req.flash('success', 'user was successfully updated')
+      res.redirect('/admin/users')
+    }
+    catch (err) { res.status(422).json(err) }
   }
 }
