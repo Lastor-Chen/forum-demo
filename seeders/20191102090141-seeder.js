@@ -29,7 +29,7 @@ module.exports = {
           address: faker.address.streetAddress(),
           opening_hours: '08:00',
           image: faker.image.imageUrl(),
-          description: faker.lorem.text(),
+          description: faker.lorem.text()
         }))
       )
     ])

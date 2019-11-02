@@ -32,7 +32,6 @@ app.use((req, res, next) => {
 
 // ==============================
 app.listen(PORT, () => {
-  db.sequelize.sync()
   const mode = process.env.NODE_ENV || 'development'
   console.log(`\n[App] Using environment "${mode}".`)
   console.log(`[App] App is running on ${HOST}:${PORT}`)
