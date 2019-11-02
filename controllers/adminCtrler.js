@@ -1,5 +1,7 @@
 const Restaurant = require('../models').Restaurant
 const fs = require('fs')
+const imgur = require('imgur')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 module.exports = {
   getRestaurants: (req, res) => {
@@ -12,7 +14,7 @@ module.exports = {
 
   createRestaurants: (req, res) => res.render('admin/create'),
 
-  postRestaurants: (req, res) => {
+  postRestaurants: async (req, res) => {
     if (!req.body.name) {
       req.flash('error', "name didn't exist")
       return res.redirect('back')
@@ -22,11 +24,12 @@ module.exports = {
     const { file } = req
 
     if (file) {
-      const uploadPath = `upload/${file.originalname}`
-      input.image = '/' + uploadPath
-
-      const data = fs.readFileSync(file.path)
-      fs.writeFileSync(uploadPath, data)
+      imgur.setClientId(IMGUR_CLIENT_ID)
+      try { 
+        const img = await imgur.uploadFile(file.path)
+        input.image = img.data.link
+      }
+      catch (err) { console.error(err) }
     } 
     
     Restaurant.create(input)
@@ -58,11 +61,12 @@ module.exports = {
     const input = req.body
     const { file } = req
     if (file) {
-      const uploadPath = `upload/${file.originalname}`
-      input.image = '/' + uploadPath
-
-      const data = fs.readFileSync(file.path)
-      fs.writeFileSync(uploadPath, data)
+      imgur.setClientId(IMGUR_CLIENT_ID)
+      try {
+        const img = await imgur.uploadFile(file.path)
+        input.image = img.data.link
+      }
+      catch (err) { console.error(err) }
     } 
 
     try { 

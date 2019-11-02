@@ -9,6 +9,8 @@ const app = express()
 const PORT = process.env.PORT || 3000
 const HOST = process.env.HOSTNAME || 'localhost'
 
+if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
+
 app.engine('hbs', exphbs({ extname: 'hbs' }))
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true }))
