@@ -5,7 +5,7 @@ const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
 // custom module
-const { isAuthed, isAuthedAdmin } = require('../lib/isAuth.js')
+const { isAuthed, isAuthedAdmin } = require('../middlewares/isAuth.js')
 
 module.exports = (app, passport) => {
   app.get('/', isAuthed, (req, res) => res.redirect('/restaurants'))
