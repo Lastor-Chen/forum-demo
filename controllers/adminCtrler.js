@@ -86,7 +86,10 @@ module.exports = {
     Restaurant.findByPk(req.params.id)
       .then(restaurant => {
         restaurant.destroy()
-          .then(restaurant => res.redirect('/admin/restaurants'))
+          .then(restaurant => { 
+            req.flash('success', 'restaurant was successfully deleted')
+            res.redirect('/admin/restaurants') 
+          })
           .catch(err => res.status(422).json(err))
       })
       .catch(err => res.status(422).json(err))
