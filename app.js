@@ -4,7 +4,6 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('./config/passport.js')
 const methodOverride = require('method-override')
-const db = require('./models')
 const app = express()
 const PORT = process.env.PORT || 3000
 const HOST = process.env.HOSTNAME || 'localhost'
