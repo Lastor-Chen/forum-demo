@@ -13,7 +13,12 @@ module.exports = {
       .catch(err => res.status(422).json(err))
   },
 
-  createRestaurants: (req, res) => res.render('admin/create'),
+  createRestaurants: (req, res) => {
+    Category.findAll()
+      .then(categories => {
+        res.render('admin/create', { categories })
+      })
+  },
 
   postRestaurants: async (req, res) => {
     if (!req.body.name) {
@@ -47,10 +52,13 @@ module.exports = {
       .catch(err => res.status(422).json(err))
   },
 
-  editRestaurant: (req, res) => {
-    Restaurant.findByPk(req.params.id)
-      .then(restaurant => res.render('admin/create', { restaurant }))
-      .catch(err => res.status(422).json(err))
+  editRestaurant: async (req, res) => {
+    try {
+      const categories = await Category.findAll()
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      res.render('admin/create', { restaurant, categories })
+    }
+    catch (err) { res.status(422).json(err) }
   },
 
   putRestaurant: async (req, res) => {
