@@ -11,7 +11,10 @@ const HOST = process.env.HOSTNAME || 'localhost'
 
 if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
 
-app.engine('hbs', exphbs({ extname: 'hbs' }))
+app.engine('hbs', exphbs({ 
+  extname: 'hbs',
+  helpers: require('./lib/hbs_helpers.js') 
+}))
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
