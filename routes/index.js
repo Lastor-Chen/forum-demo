@@ -1,7 +1,7 @@
 const restCtrler = require('../controllers/restCtrler.js')
 const adminCtrler = require('../controllers/adminCtrler.js')
 const userCtrler = require('../controllers/userCtrler.js')
-const categoryCtrler = require('../controllers/categoryCtrler.js')
+const cateCtrler = require('../controllers/categoryCtrler.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
@@ -23,7 +23,8 @@ module.exports = (app, passport) => {
   app.delete('/admin/restaurants/:id', adminCtrler.deleteRestaurant)
   app.get('/admin/users', adminCtrler.editUsers)
   app.put('/admin/users/:id', adminCtrler.putUsers)
-  app.get('/admin/categories', categoryCtrler.getCategories)
+  app.get('/admin/categories', cateCtrler.getCategories)
+  app.post('/admin/categories', cateCtrler.postCategory)
 
   app.get('/signup', userCtrler.signUpPage)
   app.post('/signup', userCtrler.signUp)
