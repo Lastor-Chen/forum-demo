@@ -25,6 +25,8 @@ module.exports = (app, passport) => {
   app.put('/admin/users/:id', adminCtrler.putUsers)
   app.get('/admin/categories', cateCtrler.getCategories)
   app.post('/admin/categories', cateCtrler.postCategory)
+  app.get('/admin/categories/:id', cateCtrler.getCategories)
+  app.put('/admin/categories/:id', cateCtrler.putCategory)
 
   app.get('/signup', userCtrler.signUpPage)
   app.post('/signup', userCtrler.signUp)
