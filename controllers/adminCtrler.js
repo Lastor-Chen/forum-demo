@@ -42,7 +42,7 @@ module.exports = {
   },
 
   getRestaurant: (req, res) => {
-    Restaurant.findByPk(req.params.id)
+    Restaurant.findByPk(req.params.id, { include: [Category] })
       .then(restaurant => res.render('admin/restaurant', { restaurant }))
       .catch(err => res.status(422).json(err))
   },
