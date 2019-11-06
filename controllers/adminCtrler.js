@@ -1,11 +1,12 @@
 const Restaurant = require('../models').Restaurant
 const User = require('../models').User
+const Category = require('../models').Category
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 module.exports = {
   getRestaurants: (req, res) => {
-    Restaurant.findAll()
+    Restaurant.findAll({ include: [Category] })
       .then(restaurants => {
         res.render('admin/restaurants', { restaurants })
       })
