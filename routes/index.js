@@ -2,6 +2,7 @@ const restCtrler = require('../controllers/restCtrler.js')
 const adminCtrler = require('../controllers/adminCtrler.js')
 const userCtrler = require('../controllers/userCtrler.js')
 const cateCtrler = require('../controllers/categoryCtrler.js')
+const commentCtrler = require('../controllers/commentCtrler.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
@@ -12,6 +13,8 @@ module.exports = (app, passport) => {
   app.get('/', isAuthed, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', isAuthed, restCtrler.getRestaurants)
   app.get('/restaurants/:id', isAuthed, restCtrler.getRestaurant)
+  
+  app.post('/comments', isAuthed, commentCtrler.postComment)
 
   app.use('/admin', isAuthedAdmin)
   app.get('/admin', (req, res) => res.redirect('/admin/restaurants'))
