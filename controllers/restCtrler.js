@@ -3,12 +3,16 @@ const Restaurant = db.Restaurant
 const Category = db.Category
 
 module.exports = {
-  getRestaurants: (req, res) => {
-    Restaurant.findAll({ include: Category })
-      .then(restaurants => {
-        res.render('restaurants', { css: 'restaurants', restaurants })
-      })
-      .catch(err => res.status(422).json(err.toString()))
+  getRestaurants: async (req, res) => {
+    try {
+      const CategoryId = req.query.categoryId
+      const whereQuery = CategoryId ? { where: { CategoryId } } : {}
+      const restaurants = await Restaurant.findAll({ ...whereQuery, include: Category })
+      const categories = await Category.findAll()
+
+      res.render('restaurants', { css: 'restaurants', restaurants, categories, CategoryId })
+    }
+    catch (err) { res.status(422).json(err.toString()) }
   },
 
   getRestaurant: (req, res) => {
