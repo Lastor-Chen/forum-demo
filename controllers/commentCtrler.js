@@ -12,5 +12,15 @@ module.exports = {
         res.redirect(`/restaurants/${newComment.RestaurantId}`)
       })
       .catch(err => res.status(422).json(err.toString()))
+  },
+
+  deleteComment: async (req, res) => {
+    try {
+      const comment = await Comment.findByPk(req.params.id)
+      await comment.destroy()
+      res.redirect(`/restaurants/${comment.RestaurantId}`)
+    }
+    catch (err) { res.status(422).json(err.toString())  }
+        
   }
 }
