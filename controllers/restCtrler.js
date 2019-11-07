@@ -9,7 +9,7 @@ module.exports = {
   getRestaurants: async (req, res) => {
     try {
       // 類別資料
-      const CategoryId = req.query.categoryId
+      const CategoryId = +req.query.categoryId || ''
       const whereQuery = CategoryId ? { where: { CategoryId } } : {}
       
       // 頁面資料
