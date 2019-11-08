@@ -59,22 +59,21 @@ module.exports = {
   },
 
   getUser: async (req, res) => {
-    const UserId = req.user.id
-    if (+req.params.id !== UserId) {
-      req.flash('error', '未具有相關權限')
-      return res.redirect(`/users/${UserId}`)
-    }
+    const UserId = +req.params.id
+    const isOwner = (req.user.id === UserId)
+
+    const showUser = await User.findByPk(UserId)
     const result = await Comment.findAndCountAll({ where: { UserId }, include: Restaurant })
     const count = result.count
     const comments = result.rows
 
-    res.render('user', { css: 'user', count, comments })
+    res.render('user', { css: 'user', showUser, isOwner, count, comments })
   },
 
   editUser: (req, res) => {
     if (+req.params.id !== req.user.id ) {
       req.flash('error', '未具有相關權限')
-      return res.redirect(`/users/${req.user.id}/edit`)
+      return res.redirect(`/users/${+req.params.id}`)
     }
     res.render('editUser')
   },
