@@ -18,6 +18,7 @@ module.exports = {
           email: item.email,
           password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
           name: item.name,
+          image: 'https://i.imgur.com/FYDQr43.jpg',
           isAdmin: index === 0 ? true : false
         }))
       ),

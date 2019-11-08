@@ -17,6 +17,10 @@ module.exports = (app, passport) => {
   app.post('/comments', isAuthed, commentCtrler.postComment)
   app.delete('/comments/:id', isAuthedAdmin, commentCtrler.deleteComment)
 
+  app.get('/users/:id', isAuthed, userCtrler.getUser)
+  app.get('/users/:id/edit', isAuthed, userCtrler.editUser)
+  app.put('/users/:id/', isAuthed, upload.single('image'), userCtrler.putUser)
+
   app.use('/admin', isAuthedAdmin)
   app.get('/admin', (req, res) => res.redirect('/admin/restaurants'))
   app.get('/admin/restaurants', adminCtrler.getRestaurants)
