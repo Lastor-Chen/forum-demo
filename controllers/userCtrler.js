@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs')
 const User = require('../models').User
+const imgur = require('imgur')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 // custom module
 const { checkSignUp } = require('../lib/checkForm.js')
@@ -16,6 +18,7 @@ module.exports = {
 
     // 註冊帳號
     input.password = bcrypt.hashSync(input.password, 10)
+    input.image = 'https://i.imgur.com/FYDQr43.jpg'
 
     User.create(input)
       .then(user => {
@@ -50,5 +53,45 @@ module.exports = {
     req.flash('success', '登出成功')
     req.logout()
     res.redirect('signin')
-  } 
+  },
+
+  getUser: (req, res) => {
+    if (+req.params.id !== req.user.id) {
+      req.flash('error', '未具有相關權限')
+      return res.redirect(`/users/${req.user.id}`)
+    }
+    res.render('user')
+  },
+
+  editUser: (req, res) => {
+    if (+req.params.id !== req.user.id ) {
+      req.flash('error', '未具有相關權限')
+      return res.redirect(`/users/${req.user.id}/edit`)
+    }
+    res.render('editUser')
+  },
+
+  putUser: async (req, res) => {
+    let error = ''
+    if (!req.body.name) { error = 'Name 不得為空' }
+    if (+req.params.id !== req.user.id) { error = '未具有相關權限' }
+    if (error) return res.render('editUser', { error })
+
+    const input = req.body
+    const { file } = req
+    if (file) {
+      imgur.setClientId(IMGUR_CLIENT_ID)
+      try {
+        const img = await imgur.uploadFile(file.path)
+        input.image = img.data.link
+      } catch (err) { console.error(err) }
+    }
+
+    try {
+      const user = await User.findByPk(req.user.id)
+      await user.update(input)
+      req.flash('success', 'user profile was successfully updated')
+      res.redirect(`/users/${req.user.id}`)
+    } catch (err) { res.status(422).json(err.toString()) }
+  }
 }
