@@ -30,7 +30,7 @@ module.exports = (app, passport) => {
   app.get('/admin/restaurants/:id/edit', adminCtrler.editRestaurant)
   app.put('/admin/restaurants/:id', upload.single('image'), adminCtrler.putRestaurant)
   app.delete('/admin/restaurants/:id', adminCtrler.deleteRestaurant)
-  app.get('/admin/users', adminCtrler.editUsers)
+  app.get('/admin/users', adminCtrler.getUsers)
   app.put('/admin/users/:id', adminCtrler.putUsers)
   app.get('/admin/categories', cateCtrler.getCategories)
   app.post('/admin/categories', cateCtrler.postCategory)

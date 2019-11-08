@@ -104,7 +104,7 @@ module.exports = {
       .catch(err => res.status(422).json(err))
   },
 
-  editUsers: (req, res) => {
+  getUsers: (req, res) => {
     User.findAll({ order: [['id', 'ASC']] })
       .then(users => res.render('admin/users', { users }))
       .catch(err => res.status(422).json(err))
