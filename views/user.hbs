@@ -6,3 +6,14 @@
     <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
   </div>
 </div>
+<div class="card mt-4">
+  <div class="card-header">{{count}} 已評論餐廳</div>
+  <div class="card-body d-flex">
+    {{#each comments}}
+      <a href="/restaurants/{{Restaurant.id}}" class="res-link mr-2 img-thumbnail" title="{{Restaurant.name}}">
+        <div class="res-icon" style="background-image: url({{Restaurant.image}});"></div>
+        <div class="overlay"></div>
+      </a>
+    {{/each}}
+  </div>
+</div>

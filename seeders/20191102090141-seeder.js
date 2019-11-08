@@ -38,6 +38,13 @@ module.exports = {
           description: faker.lorem.text(),
           CategoryId: Math.floor(Math.random() * 5) + 1
         }))
+      ),
+      queryInterface.bulkInsert('Comments',
+        Array.from({ length: 10 }).map((item, index) => ({
+          text: faker.lorem.sentence(5, 15),
+          UserId: Math.floor(Math.random() * 3) + 1,
+          RestaurantId: Math.floor(Math.random() * 5) + 1
+        }))
       )
     ])
   },
@@ -47,7 +54,8 @@ module.exports = {
     return Promise.all([
       queryInterface.bulkDelete('Users', null, option),
       queryInterface.bulkDelete('Categories', null, option),
-      queryInterface.bulkDelete('Restaurants', null, option)
+      queryInterface.bulkDelete('Restaurants', null, option),
+      queryInterface.bulkDelete('Comments', null, option)
     ])
   }
 };

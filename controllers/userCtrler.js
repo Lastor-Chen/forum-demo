@@ -1,5 +1,8 @@
 const bcrypt = require('bcryptjs')
-const User = require('../models').User
+const db = require('../models')
+const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -55,12 +58,17 @@ module.exports = {
     res.redirect('signin')
   },
 
-  getUser: (req, res) => {
-    if (+req.params.id !== req.user.id) {
+  getUser: async (req, res) => {
+    const UserId = req.user.id
+    if (+req.params.id !== UserId) {
       req.flash('error', '未具有相關權限')
-      return res.redirect(`/users/${req.user.id}`)
+      return res.redirect(`/users/${UserId}`)
     }
-    res.render('user')
+    const result = await Comment.findAndCountAll({ where: { UserId }, include: Restaurant })
+    const count = result.count
+    const comments = result.rows
+
+    res.render('user', { css: 'user', count, comments })
   },
 
   editUser: (req, res) => {

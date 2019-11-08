@@ -1,0 +1,25 @@
+.res-link {
+  position: relative;
+}
+
+.res-icon {
+  width: 75px;
+  height: 75px;
+  background-size: cover;
+  background-position: center;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  background-color: #000;
+}
+
+.res-link:hover .overlay {
+  opacity: 0.5;
+  transition: .2s linear;
+}
