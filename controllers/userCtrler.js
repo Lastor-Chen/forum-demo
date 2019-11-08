@@ -5,7 +5,7 @@ const User = require('../models').User
 const { checkSignUp } = require('../lib/checkForm.js')
 
 module.exports = {
-  signUpPage: (req, res) => res.render('signUp'),
+  signUpPage: (req, res) => res.render('signup'),
 
   signUp: async (req, res) => {
     const input = { ...req.body }
