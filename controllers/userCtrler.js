@@ -59,15 +59,17 @@ module.exports = {
   },
 
   getUser: async (req, res) => {
-    const UserId = +req.params.id
-    const isOwner = (req.user.id === UserId)
-
-    const showUser = await User.findByPk(UserId)
-    const result = await Comment.findAndCountAll({ where: { UserId }, include: Restaurant })
-    const count = result.count
-    const comments = result.rows
-
-    res.render('user', { css: 'user', showUser, isOwner, count, comments })
+    try {
+      const UserId = +req.params.id
+      const isOwner = (req.user.id === UserId)
+  
+      const showUser = await User.findByPk(UserId)
+      const result = await Comment.findAndCountAll({ where: { UserId }, include: Restaurant })
+      const count = result.count
+      const comments = result.rows
+  
+      res.render('user', { css: 'user', showUser, isOwner, count, comments })
+    } catch (err) { res.status(422).json(err.toString()) }
   },
 
   editUser: (req, res) => {
