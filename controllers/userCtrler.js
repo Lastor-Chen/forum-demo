@@ -4,6 +4,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Followship = db.Followship
 const Like = db.Like
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
@@ -162,6 +163,25 @@ module.exports = {
         users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
         res.render('topUsers', { users })
       })
+      .catch(err => res.status(422).json(err.toString()))
+  },
+
+  addFollowing: (req, res) => {
+    Followship.create({
+      followerId: req.user.id,
+      followingId: req.params.userId
+    })
+      .then(() => res.redirect('back'))
+      .catch(err => res.status(422).json(err.toString()))
+  },
+
+  removeFollowing: (req, res) => {
+    Followship.findOne({ where: {
+      followerId: req.user.id,
+      followingId: req.params.userId
+    }})
+      .then(followship => followship.destroy())
+      .then(() => res.redirect('back'))
       .catch(err => res.status(422).json(err.toString()))
   }
 }

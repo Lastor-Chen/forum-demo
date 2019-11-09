@@ -18,20 +18,22 @@
 <div class="row" style="text-align: center;">
   {{#each users}}
     <div class="col-3">
-      <a href="/users/{{this.id}}">
-        <img class="" src="{{this.image}}" width="140px" height="140px">
+      <a href="/users/{{id}}">
+        <img class="" src="{{image}}" width="140px" height="140px">
       </a>
-      <h2>{{this.name}}</h2>
-      <span class="badge badge-secondary">追蹤人數：{{this.FollowerCount}}</span>
-      <p>
-        {{#if this.isFollowed }}
-          <form action="/following/{{this.id}}?_method=DELETE" method="POST" style="display: contents;"><button
-              type="submit" class="btn btn-danger">取消追蹤</button></form>
+      <h2>{{name}}</h2>
+      <span class="badge badge-secondary">追蹤人數：{{FollowerCount}}</span>
+      <div class="mt-2">
+        {{#if isFollowed }}
+          <form action="/following/{{id}}?_method=DELETE" method="POST" style="display: contents;">
+            <button type="submit" class="btn btn-primary">Following</button>
+          </form>
         {{else}}
-          <form action="/following/{{this.id}}" method="POST" style="display: contents;"><button type="submit"
-              class="btn btn-primary">追蹤</button></form>
+          <form action="/following/{{id}}" method="POST" style="display: contents;">
+            <button type="submit" class="btn btn-outline-primary">Follow</button>
+          </form>
         {{/if}}
-      </p>
+      </div>
     </div>
   {{/each}}
 </div>

@@ -30,6 +30,9 @@ module.exports = (app, passport) => {
   app.get('/users/:id/edit', isAuthed, userCtrler.editUser)
   app.put('/users/:id/', isAuthed, upload.single('image'), userCtrler.putUser)
 
+  app.post('/following/:userId', isAuthed, userCtrler.addFollowing)
+  app.delete('/following/:userId', isAuthed, userCtrler.removeFollowing)
+
   app.use('/admin', isAuthedAdmin)
   app.get('/admin', (req, res) => res.redirect('/admin/restaurants'))
   app.get('/admin/restaurants', adminCtrler.getRestaurants)
