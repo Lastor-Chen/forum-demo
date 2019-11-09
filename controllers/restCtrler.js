@@ -20,8 +20,11 @@ module.exports = {
 
       // db Query
       const result = await Restaurant.findAndCountAll({ ...whereQuery, include: Category, offset, limit: pageLimit })
-      const restaurants = result.rows
       const categories = await Category.findAll()
+      const restaurants = result.rows.map(rest => {
+        rest.isFavorite = req.user.FavoriteRestaurants.map(v => v.id).includes(rest.id)
+        return rest
+      })
 
       // 分頁 bar 資料
       const totalPages = Math.ceil(result.count / pageLimit)

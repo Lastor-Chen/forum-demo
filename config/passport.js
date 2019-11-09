@@ -1,7 +1,9 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcryptjs')
-const User = require('../models').User
+const db = require('../models')
+const User = db.User
+const Restaurant = db.Restaurant
 
 const localOption = {
   usernameField: 'email',
@@ -27,7 +29,11 @@ passport.serializeUser((user, done) => done(null, user.id))
 
 // 反序列化 session
 passport.deserializeUser((id, done) => {
-  User.findByPk(id)
+  User.findByPk(id, { 
+    include: [
+      { model: Restaurant, as: 'FavoriteRestaurants' }
+    ] 
+  })
     .then(user => done(null, user))
 })
 
