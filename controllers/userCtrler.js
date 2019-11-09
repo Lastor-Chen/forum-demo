@@ -3,6 +3,7 @@ const db = require('../models')
 const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
+const Favorite = db.Favorite
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -101,6 +102,27 @@ module.exports = {
       await user.update(input)
       req.flash('success', 'user profile was successfully updated')
       res.redirect(`/users/${req.user.id}`)
+    } catch (err) { res.status(422).json(err.toString()) }
+  },
+
+  addFavorite: (req, res) => {
+    Favorite.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.RestaurantId
+    })
+    .then(favorite => res.redirect('back'))
+    .catch(err => res.status(422).json(err.toString()))
+  },
+
+  removeFavorite: async (req, res) => {
+    try {
+      const favorite = await Favorite.findOne({ where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.RestaurantId
+      }})
+      
+      await favorite.destroy()
+      res.redirect('back')
     } catch (err) { res.status(422).json(err.toString()) }
   }
 }
