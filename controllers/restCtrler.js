@@ -50,7 +50,7 @@ module.exports = {
       
       await restaurant.increment('viewCounts')
       const isFavorite = restaurant.FavoriteUsers.map(user => user.id).includes(req.user.id)
-      res.render('restaurant', { restaurant, isFavorite })
+      res.render('restaurant', { css: 'restaurant', restaurant, isFavorite })
     } catch (err) { res.status(422).json(err.toString()) }
   },
 
