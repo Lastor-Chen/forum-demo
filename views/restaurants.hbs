@@ -22,13 +22,16 @@
   {{#each restaurants}}
     <div class="col-md-4">
       <div class="card mb-4 shadow-sm">
-        <img class="card-img-top" src="{{image}}" alt="Card image cap" width="286px" height="180px">
+        <a href="/restaurants/{{id}}" class="rest-link">
+          <div class="rest-img" style="background-image: url({{image}}), url('/img/loading.gif');"></div>
+          <div class="overlay"></div>
+        </a>
         <div class="card-body">
           <p class="card-text">
-            <a href="/restaurants/{{id}}">{{name}}</a>
+            <a href="/restaurants/{{id}}" class="h5">{{name}}</a>
           </p>
           <span class="badge badge-secondary">{{Category.name}}</span>
-          <div class="card-text line-camp">{{description}}</div>
+          <div class="card-text line-camp mb-3">{{description}}</div>
           {{#if isFavorite}}
             <form action="/favorite/{{id}}?_method=DELETE" method="POST"><button type="submit" class="btn btn-danger">移除最愛</button></form>
           {{else}}
