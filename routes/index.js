@@ -19,6 +19,9 @@ module.exports = (app, passport) => {
   app.post('/favorite/:RestaurantId', isAuthed, userCtrler.addFavorite)
   app.delete('/favorite/:RestaurantId', isAuthed, userCtrler.removeFavorite)
 
+  app.post('/like/:RestaurantId', isAuthed, userCtrler.addLike)
+  app.delete('/like/:RestaurantId', isAuthed, userCtrler.removeLike)
+
   app.post('/comments', isAuthed, commentCtrler.postComment)
   app.delete('/comments/:id', isAuthedAdmin, commentCtrler.deleteComment)
 

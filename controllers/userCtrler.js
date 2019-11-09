@@ -4,6 +4,7 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 const Favorite = db.Favorite
+const Like = db.Like
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -122,6 +123,29 @@ module.exports = {
       }})
       
       await favorite.destroy()
+      res.redirect('back')
+    } catch (err) { res.status(422).json(err.toString()) }
+  },
+
+  addLike: (req, res) => {
+    Like.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.RestaurantId
+    })
+      .then(like => res.redirect('back'))
+      .catch(err => res.status(422).json(err.toString()))
+  },
+
+  removeLike: async (req, res) => {
+    try {
+      const like = await Like.findOne({
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.RestaurantId
+        }
+      })
+
+      await like.destroy()
       res.redirect('back')
     } catch (err) { res.status(422).json(err.toString()) }
   }

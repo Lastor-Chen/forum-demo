@@ -30,9 +30,7 @@ passport.serializeUser((user, done) => done(null, user.id))
 // 反序列化 session
 passport.deserializeUser((id, done) => {
   User.findByPk(id, { 
-    include: [
-      { model: Restaurant, as: 'FavoriteRestaurants' }
-    ] 
+    include: [{ all: true, nested: false }]
   })
     .then(user => done(null, user))
 })

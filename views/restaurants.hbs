@@ -33,9 +33,22 @@
           <span class="badge badge-secondary">{{Category.name}}</span>
           <div class="card-text line-camp mb-3">{{description}}</div>
           {{#if isFavorite}}
-            <form action="/favorite/{{id}}?_method=DELETE" method="POST"><button type="submit" class="btn btn-danger">移除最愛</button></form>
+            <form action="/favorite/{{id}}?_method=DELETE" method="POST" class="d-inline-block">
+              <button type="submit" class="btn btn-danger">移除最愛</button>
+            </form>
           {{else}}
-            <form action="/favorite/{{id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button></form>
+            <form action="/favorite/{{id}}" method="POST" class="d-inline-block">
+              <button type="submit" class="btn btn-primary">加到最愛</button>
+            </form>
+          {{/if}}
+          {{#if isLiked}}
+            <form action="/like/{{id}}?_method=DELETE" method="POST" class="d-inline-block">
+              <button type="submit" class="btn btn-danger">Unlike</button>
+            </form>
+          {{else}}
+            <form action="/like/{{id}}" method="POST" class="d-inline-block">
+              <button type="submit" class="btn btn-primary">Like</button>
+            </form>
           {{/if}}
         </div>
       </div>

@@ -23,6 +23,7 @@ module.exports = {
       const categories = await Category.findAll()
       const restaurants = result.rows.map(rest => {
         rest.isFavorite = req.user.FavoriteRestaurants.map(v => v.id).includes(rest.id)
+        rest.isLiked = req.user.LikedRestaurants.map(v => v.id).includes(rest.id)
         return rest
       })
 
@@ -50,7 +51,8 @@ module.exports = {
       
       await restaurant.increment('viewCounts')
       const isFavorite = restaurant.FavoriteUsers.map(user => user.id).includes(req.user.id)
-      res.render('restaurant', { css: 'restaurant', restaurant, isFavorite })
+      const isLiked = restaurant.LikedUsers.map(user => user.id).includes(req.user.id)
+      res.render('restaurant', { css: 'restaurant', restaurant, isFavorite, isLiked })
     } catch (err) { res.status(422).json(err.toString()) }
   },
 
