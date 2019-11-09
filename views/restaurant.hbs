@@ -42,6 +42,7 @@
 <br />
 <br />
 <h3>所有評論：</h3>
+<hr />
 {{#each restaurant.Comments}}
   {{#if ../user.isAdmin}}
     <form action="/comments/{{id}}?_method=DELETE" method="POST" class="float-right">
