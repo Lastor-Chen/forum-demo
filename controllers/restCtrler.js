@@ -47,5 +47,15 @@ module.exports = {
         res.render('restaurant', { restaurant })
       })
       .catch(err => res.status(422).json(err.toString()))
+  },
+
+  getFeeds: async (req, res) => {
+    try {
+      const option = { limit: 10, order: [['createdAt', 'DESC']] }
+      const restaurants = await Restaurant.findAll({ ...option, include: Category})
+      const comments = await Comment.findAll({ ...option, include: [User, Restaurant] })
+
+      res.render('feeds', { restaurants, comments })
+    } catch (err) { res.status(422).json(err.toString()) }
   }
 }

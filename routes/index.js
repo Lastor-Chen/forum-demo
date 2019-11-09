@@ -12,6 +12,7 @@ const { isAuthed, isAuthedAdmin } = require('../middlewares/isAuth.js')
 module.exports = (app, passport) => {
   app.get('/', isAuthed, (req, res) => res.redirect('/restaurants'))
   app.get('/restaurants', isAuthed, restCtrler.getRestaurants)
+  app.get('/restaurants/feeds', isAuthed, restCtrler.getFeeds)
   app.get('/restaurants/:id', isAuthed, restCtrler.getRestaurant)
   
   app.post('/comments', isAuthed, commentCtrler.postComment)
