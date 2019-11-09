@@ -14,6 +14,7 @@ module.exports = (app, passport) => {
   app.get('/restaurants', isAuthed, restCtrler.getRestaurants)
   app.get('/restaurants/feeds', isAuthed, restCtrler.getFeeds)
   app.get('/restaurants/:id', isAuthed, restCtrler.getRestaurant)
+  app.get('/restaurants/:id/dashboard', isAuthed, restCtrler.getDashboard)
   
   app.post('/comments', isAuthed, commentCtrler.postComment)
   app.delete('/comments/:id', isAuthedAdmin, commentCtrler.deleteComment)

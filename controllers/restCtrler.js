@@ -57,5 +57,14 @@ module.exports = {
 
       res.render('feeds', { restaurants, comments })
     } catch (err) { res.status(422).json(err.toString()) }
+  },
+
+  getDashboard: async (req, res) => {
+    try {
+      const RestaurantId = +req.params.id
+      const restaurant = await Restaurant.findByPk(RestaurantId, { include: [Category, Comment] })
+
+      res.render('dashboard', { restaurant })
+    } catch (err) { res.status(422).json(err.toString()) }
   }
 }
