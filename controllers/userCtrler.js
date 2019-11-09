@@ -148,5 +148,20 @@ module.exports = {
       await like.destroy()
       res.redirect('back')
     } catch (err) { res.status(422).json(err.toString()) }
+  },
+
+  getTopUser: (req, res) => {
+    User.findAll({ include: 'Followers' })
+      .then(users => {
+        users = users.map(user => {
+          user.FollowerCount = user.Followers.length,
+          user.isFollowed = req.user.Followings.some(v => v.id === user.id)
+          return user
+        })
+        // 依 Follower數 排序
+        users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
+        res.render('topUsers', { users })
+      })
+      .catch(err => res.status(422).json(err.toString()))
   }
 }
