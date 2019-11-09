@@ -27,8 +27,8 @@ module.exports = {
         limit: pageLimit })
       const categories = await Category.findAll()
       const restaurants = result.rows.map(rest => {
-        rest.isFavorite = req.user.FavoriteRestaurants.map(v => v.id).includes(rest.id)
-        rest.isLiked = req.user.LikedRestaurants.map(v => v.id).includes(rest.id)
+        rest.isFavorite = req.user.FavoriteRestaurants.some(v => v.id === rest.id)
+        rest.isLiked = req.user.LikedRestaurants.some(v => v.id === rest.id)
         return rest
       })
 
@@ -55,8 +55,8 @@ module.exports = {
       })
       
       await restaurant.increment('viewCounts')
-      const isFavorite = restaurant.FavoriteUsers.map(user => user.id).includes(req.user.id)
-      const isLiked = restaurant.LikedUsers.map(user => user.id).includes(req.user.id)
+      const isFavorite = restaurant.FavoriteUsers.some(user => user.id === req.user.id)
+      const isLiked = restaurant.LikedUsers.some(user => user.id === req.user.id)
       res.render('restaurant', { css: 'restaurant', restaurant, isFavorite, isLiked })
     } catch (err) { res.status(422).json(err.toString()) }
   },
