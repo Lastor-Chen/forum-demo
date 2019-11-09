@@ -1,0 +1,24 @@
+.avatar-link {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar {
+  width: 140px;
+  height: 140px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  background-color: #000;
+  transition: .2s linear;
+}
+
+.avatar-link:hover .overlay {
+  opacity: 0.5;
+}

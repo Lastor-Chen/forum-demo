@@ -161,7 +161,7 @@ module.exports = {
         })
         // 依 Follower數 排序
         users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
-        res.render('topUsers', { users })
+        res.render('topUsers', { css: 'topUsers', users })
       })
       .catch(err => res.status(422).json(err.toString()))
   },
