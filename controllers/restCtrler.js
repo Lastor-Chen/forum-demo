@@ -36,17 +36,18 @@ module.exports = {
     catch (err) { res.status(422).json(err.toString()) }
   },
 
-  getRestaurant: (req, res) => {
-    Restaurant.findByPk(req.params.id, { 
-      include: [{ 
-        all: true, 
-        nested: true 
-      }]
-    })
-      .then(restaurant => {
-        res.render('restaurant', { restaurant })
+  getRestaurant: async (req, res) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        include: [{
+          all: true,
+          nested: true
+        }]
       })
-      .catch(err => res.status(422).json(err.toString()))
+      
+      await restaurant.increment('viewCounts')
+      res.render('restaurant', { restaurant })
+    } catch (err) { res.status(422).json(err.toString()) }
   },
 
   getFeeds: async (req, res) => {
