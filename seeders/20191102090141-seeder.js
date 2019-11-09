@@ -57,7 +57,8 @@ module.exports = {
       queryInterface.bulkDelete('Restaurants', null, option),
       queryInterface.bulkDelete('Comments', null, option),
       queryInterface.bulkDelete('Favorites', null, option),
-      queryInterface.bulkDelete('Likes', null, option)
+      queryInterface.bulkDelete('Likes', null, option),
+      queryInterface.bulkDelete('Followships', null, option)
     ])
   }
 };
