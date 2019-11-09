@@ -19,7 +19,12 @@ module.exports = {
       const offset = (page - 1) * pageLimit
 
       // db Query
-      const result = await Restaurant.findAndCountAll({ ...whereQuery, include: Category, offset, limit: pageLimit })
+      const result = await Restaurant.findAndCountAll({ 
+        ...whereQuery, 
+        order: [['id', 'ASC']],
+        include: Category, 
+        offset, 
+        limit: pageLimit })
       const categories = await Category.findAll()
       const restaurants = result.rows.map(rest => {
         rest.isFavorite = req.user.FavoriteRestaurants.map(v => v.id).includes(rest.id)
