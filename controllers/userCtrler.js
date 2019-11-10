@@ -24,7 +24,7 @@ module.exports = {
 
     // 註冊帳號
     input.password = bcrypt.hashSync(input.password, 10)
-    input.image = 'https://i.imgur.com/FYDQr43.jpg'
+    input.image = '/img/user2.jpg'   // 預設圖片
 
     User.create(input)
       .then(user => {
@@ -63,15 +63,45 @@ module.exports = {
 
   getUser: async (req, res) => {
     try {
-      const UserId = +req.params.id
-      const isOwner = (req.user.id === UserId)
+      const UserId = +req.params.id   // 被瀏覽者id
+      const operatorId = req.user.id    // 使用者id
+      const isOwner = (operatorId === UserId)
   
-      const showUser = await User.findByPk(UserId)
+      // following
+      const showedUser = await User.findByPk(UserId, {  // showedUser 被瀏覽者
+        include: { all: true, nested: false } 
+      })
+      const following = {
+        users: showedUser.Followings,
+        count: showedUser.Followings.length
+      }
+
+      // follower
+      const follower = {
+        users: showedUser.Followers,
+        count: showedUser.Followers.length
+      }
+      const isFollowed = follower.users.some(user => user.id === operatorId)
+
+      // 收藏的餐廳
+      const favRestaurant = {
+        restaurants: showedUser.FavoriteRestaurants,
+        count: showedUser.FavoriteRestaurants.length
+      }
+
+      // 已評論餐廳
       const result = await Comment.findAndCountAll({ where: { UserId }, include: Restaurant })
-      const count = result.count
-      const comments = result.rows
-  
-      res.render('user', { css: 'user', showUser, isOwner, count, comments })
+      const comment = {
+        // 去除重複評論的餐廳
+        comments: result.rows.filter((comment, index, self) =>
+          index === self.findIndex(item => (
+            item.Restaurant.id === comment.Restaurant.id
+          ))
+        ),
+        count: result.count 
+      }
+
+      res.render('user', { css: 'user', showedUser, isOwner, isFollowed, following, follower, comment, favRestaurant })
     } catch (err) { res.status(422).json(err.toString()) }
   },
 

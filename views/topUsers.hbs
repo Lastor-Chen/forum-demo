@@ -27,15 +27,19 @@
       </a>
       <span class="badge badge-secondary">追蹤人數：{{FollowerCount}}</span>
       <div class="mt-2">
-        {{#if isFollowed }}
-          <form action="/following/{{id}}?_method=DELETE" method="POST" style="display: contents;">
-            <button type="submit" class="btn btn-primary">Following</button>
-          </form>
+        {{#ifEqual id ../user.id}}
+          {{!-- 對象為使用者自身，不顯示 follow 按鈕 --}}
         {{else}}
-          <form action="/following/{{id}}" method="POST" style="display: contents;">
-            <button type="submit" class="btn btn-outline-primary">Follow</button>
-          </form>
-        {{/if}}
+          {{#if isFollowed }}
+            <form action="/following/{{id}}?_method=DELETE" method="POST" style="display: contents;">
+              <button type="submit" class="btn btn-primary">Following</button>
+            </form>
+          {{else}}
+            <form action="/following/{{id}}" method="POST" style="display: contents;">
+              <button type="submit" class="btn btn-outline-primary">Follow</button>
+            </form>
+          {{/if}}
+        {{/ifEqual}}
       </div>
     </div>
   {{/each}}

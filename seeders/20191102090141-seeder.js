@@ -6,11 +6,12 @@ const faker = require('faker')
 module.exports = {
   up: (queryInterface, Sequelize) => {
     const users = [
-      { email: 'root@example.com', name: 'root' },
-      { email: 'user1@example.com', name: 'user1' },
-      { email: 'user2@example.com', name: 'user2' },
+      { email: 'root@example.com', name: 'root', image: '/img/admin.jpg' },
+      { email: 'user1@example.com', name: 'user1', image: '/img/user1.jpg' },
+      { email: 'user2@example.com', name: 'user2', image: '/img/user2.jpg' },
     ]
     const categories = ['中式料理', '日本料理', '義大利料理', '墨西哥料理', '素食料理', '美式料理', '複合式料理']
+    const followship = [[1, 2], [1, 3], [2, 1]]
 
     return Promise.all([
       queryInterface.bulkInsert('Users', 
@@ -18,7 +19,7 @@ module.exports = {
           email: item.email,
           password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
           name: item.name,
-          image: 'https://i.imgur.com/FYDQr43.jpg',
+          image: item.image,
           isAdmin: index === 0 ? true : false
         }))
       ),
@@ -57,6 +58,12 @@ module.exports = {
           UserId: 3,
           RestaurantId: ++index
         }))
+      ),
+      queryInterface.bulkInsert('Followships',
+        followship.map(item => ({
+          followerId: item[0],
+          followingId: item[1],
+        }))
       )
     ])
   },
@@ -71,7 +78,8 @@ module.exports = {
       queryInterface.bulkDelete('Favorites', null, option),
       queryInterface.bulkDelete('Likes', null, option),
       queryInterface.bulkDelete('Followships', null, option),
-      queryInterface.bulkDelete('Favorites', null, option)
+      queryInterface.bulkDelete('Favorites', null, option),
+      queryInterface.bulkDelete('Followships', null, option)
     ])
   }
 };
