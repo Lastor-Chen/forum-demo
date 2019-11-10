@@ -45,6 +45,18 @@ module.exports = {
           UserId: Math.floor(Math.random() * 3) + 1,
           RestaurantId: Math.floor(Math.random() * 5) + 1
         }))
+      ),
+      queryInterface.bulkInsert('Favorites',
+        [...Array(10)].map((item, index) => ({  // 餐廳各被收藏 1 次
+          UserId: 2,
+          RestaurantId: ++index
+        }))
+      ),
+      queryInterface.bulkInsert('Favorites',
+        [...Array(3)].map((item, index) => ({  // 疊加餐廳被收藏次數
+          UserId: 3,
+          RestaurantId: ++index
+        }))
       )
     ])
   },
@@ -58,7 +70,8 @@ module.exports = {
       queryInterface.bulkDelete('Comments', null, option),
       queryInterface.bulkDelete('Favorites', null, option),
       queryInterface.bulkDelete('Likes', null, option),
-      queryInterface.bulkDelete('Followships', null, option)
+      queryInterface.bulkDelete('Followships', null, option),
+      queryInterface.bulkDelete('Favorites', null, option)
     ])
   }
 };

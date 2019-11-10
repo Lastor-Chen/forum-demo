@@ -1,0 +1,42 @@
+.card {
+  max-width: 540px;
+}
+
+/* 餐廳描述省略文字 */
+.line-camp {
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+}
+
+/* 餐廳圖片 */
+.rest-link {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+.rest-img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  border-radius: .25rem 0 0 .25rem;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  background-color: #000;
+  transition: .2s linear;
+}
+
+.rest-link:hover .overlay {
+  opacity: 0.5;
+}

@@ -1,3 +1,4 @@
+const sequelize = require('sequelize')
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
@@ -78,5 +79,35 @@ module.exports = {
 
       res.render('dashboard', { restaurant })
     } catch (err) { res.status(422).json(err.toString()) }
+  },
+
+  getTopRest: (req, res) => {
+    /**
+     * 筆記，下方 Query 等同 SQL，研究這個研究到快吐了，PostgreSQL 還不兼容，plz kill me.....
+     * SELECT *, (SELECT COUNT(*) FROM favorites WHERE favorites.RestaurantId = restaurants.id) AS favUserCount
+     * FROM restaurants
+     * ORDER BY favUserCount DESC;
+     */
+
+    // 處理 PostgreSQL(heroku) / MySQL 語法不兼容問題
+    let literal = '(SELECT COUNT(*) FROM Favorites WHERE Favorites.RestaurantId = Restaurant.id)'
+    if (process.env.NODE_ENV === 'production') { 
+      literal = '(SELECT COUNT(*) FROM "Favorites" WHERE "Favorites"."RestaurantId" = "Restaurant".id)'
+    }
+
+    Restaurant.findAll({ 
+      attributes: { include: [[sequelize.literal(literal), 'favUserCount']] },
+      order: [[sequelize.col('favUserCount'), 'DESC']],
+      limit: 10
+    })
+      .then(rests => {
+        let restaurants = rests.map(rest => {
+          rest.isFavorite = req.user.FavoriteRestaurants.some(v => v.id === rest.id)
+          return rest
+        })
+        // 頁面不列出，未被收藏者
+        restaurants = restaurants.filter(rest => rest.dataValues.favUserCount > 0)
+        res.render('topRestaurants', { css: 'topRestaurants', restaurants })
+      })
   }
 }
