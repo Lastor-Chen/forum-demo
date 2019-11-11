@@ -3,7 +3,6 @@ const Comment = db.Comment
 
 module.exports = {
   postComment: (req, res) => {
-    console.log(req.body)
     const newComment = req.body
     newComment.UserId = req.user.id
 

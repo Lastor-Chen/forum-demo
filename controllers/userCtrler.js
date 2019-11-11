@@ -90,15 +90,17 @@ module.exports = {
       }
 
       // 已評論餐廳
-      const result = await Comment.findAndCountAll({ where: { UserId }, include: Restaurant })
+      const results = await Comment.findAll({ where: { UserId }, include: Restaurant })
+
+      // 去除重複評論的餐廳
+      const uniqRests = results.filter((comment, index, self) =>
+        index === self.findIndex(refItem => (
+          comment.Restaurant.id === refItem.Restaurant.id
+        ))
+      )
       const comment = {
-        // 去除重複評論的餐廳
-        comments: result.rows.filter((comment, index, self) =>
-          index === self.findIndex(item => (
-            item.Restaurant.id === comment.Restaurant.id
-          ))
-        ),
-        count: result.count 
+        comments: uniqRests,
+        count: uniqRests.length 
       }
 
       res.render('user', { css: 'user', showedUser, isOwner, isFollowed, following, follower, comment, favRestaurant })
