@@ -1,17 +1,11 @@
 const Category = require('../models').Category
+const cateService = require('./services/categoryService.js')
 
 module.exports = {
   getCategories: (req, res) => {
-    const cateId = +req.params.id 
-    Category.findAll()
-      .then(categories => {
-        // request 帶 'categories/:id' 時，找出對應物件
-        let category = null
-        if (cateId) { category = categories.find(item => item.id === cateId) }
-
-        res.render('admin/categories', { categories, category })
-      })
-      .catch(err => res.status(422).json(err))
+    cateService.getCategories(req, res,
+      (categories, category) => res.render('admin/categories', { categories, category })
+    )
   },
 
   postCategory: (req, res) => {
