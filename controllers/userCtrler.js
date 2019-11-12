@@ -67,10 +67,13 @@ module.exports = {
       const operatorId = req.user.id    // 使用者id
       const isOwner = (operatorId === UserId)
   
+      // 一齊 Query，showedUser 為 "被瀏覽者"
+      const [comments, showedUser] = await Promise.all([
+        Comment.findAll({ where: { UserId }, include: Restaurant }),
+        User.findByPk(UserId, { include: { all: true, nested: false } })
+      ])
+
       // following
-      const showedUser = await User.findByPk(UserId, {  // showedUser 被瀏覽者
-        include: { all: true, nested: false } 
-      })
       const following = {
         users: showedUser.Followings,
         count: showedUser.Followings.length
@@ -90,10 +93,7 @@ module.exports = {
       }
 
       // 已評論餐廳
-      const results = await Comment.findAll({ where: { UserId }, include: Restaurant })
-
-      // 去除重複評論的餐廳
-      const uniqRests = results.filter((comment, index, self) =>
+      const uniqRests = comments.filter((comment, index, self) =>  // 去除重複評論的餐廳
         index === self.findIndex(refItem => (
           comment.Restaurant.id === refItem.Restaurant.id
         ))
