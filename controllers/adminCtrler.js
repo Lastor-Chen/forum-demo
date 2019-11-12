@@ -48,9 +48,9 @@ module.exports = {
   },
 
   getRestaurant: (req, res) => {
-    Restaurant.findByPk(req.params.id, { include: [Category] })
-      .then(restaurant => res.render('admin/restaurant', { restaurant }))
-      .catch(err => res.status(422).json(err))
+    adminService.getRestaurant(req, res,
+      restaurant => res.render('admin/restaurant', { restaurant })
+    )
   },
 
   editRestaurant: async (req, res) => {

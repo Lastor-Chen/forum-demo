@@ -13,5 +13,13 @@ module.exports = {
       cb(restaurants)
 
     } catch (err) { res.status(BAD_GATEWAY).send(err.toString()) }
+  },
+
+  getRestaurant: async (req, res, cb) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, { include: Category })
+      cb(restaurant)
+
+    } catch (err) { res.status(422).json(err) }
   }
 }
