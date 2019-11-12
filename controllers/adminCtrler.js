@@ -5,13 +5,13 @@ const Category = db.Category
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
+const adminService = require('./services/adminService.js')
+
 module.exports = {
   getRestaurants: (req, res) => {
-    Restaurant.findAll({ include: [Category] })
-      .then(restaurants => {
-        res.render('admin/restaurants', { restaurants })
-      })
-      .catch(err => res.status(422).json(err))
+    adminService.getRestaurants(req, res, 
+      restaurants => res.render('admin/restaurants', { restaurants })
+    )
   },
 
   createRestaurants: (req, res) => {
