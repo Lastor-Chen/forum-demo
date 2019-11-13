@@ -12,7 +12,10 @@ module.exports = {
       const restaurants = await Restaurant.findAll({ include: Category })
       cb(restaurants)
 
-    } catch (err) { res.status(BAD_GATEWAY).send(err.toString()) }
+    } catch (err) { 
+      console.error(err.toString())
+      cb({ status: 'error', message: err.toString() })
+    }
   },
 
   getRestaurant: async (req, res, cb) => {
@@ -20,7 +23,10 @@ module.exports = {
       const restaurant = await Restaurant.findByPk(req.params.id, { include: Category })
       cb(restaurant)
 
-    } catch (err) { res.status(422).json(err) }
+    } catch (err) { 
+      console.error(err.toString())
+      cb({ status: 'error', message: err.toString() })
+    }
   },
 
   deleteRestaurant: async (req, res, cb) => {
@@ -29,6 +35,9 @@ module.exports = {
       await restaurant.destroy()
       cb({ status: 'success', message: 'restaurant was successfully deleted' })
 
-    } catch (err) { cb({ status: 'error', message: err.toString() }) }
+    } catch (err) { 
+      console.error(err.toString())
+      cb({ status: 'error', message: err.toString() }) 
+    }
   },
 }

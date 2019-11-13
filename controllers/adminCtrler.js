@@ -11,7 +11,11 @@ const adminService = require('./services/adminService.js')
 module.exports = {
   getRestaurants: (req, res) => {
     adminService.getRestaurants(req, res, 
-      restaurants => res.render('admin/restaurants', { restaurants })
+      restaurants => {
+        if (restaurants.status === 'error') return res.status(BAD_GATEWAY).json(restaurants)
+        
+        res.render('admin/restaurants', { restaurants })
+      }
     )
   },
 
@@ -50,7 +54,11 @@ module.exports = {
 
   getRestaurant: (req, res) => {
     adminService.getRestaurant(req, res,
-      restaurant => res.render('admin/restaurant', { restaurant })
+      restaurant => {
+        if (restaurant.status === 'error') return res.status(BAD_GATEWAY).json(restaurant)
+
+        res.render('admin/restaurant', { restaurant })
+      }
     )
   },
 
