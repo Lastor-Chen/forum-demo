@@ -39,7 +39,7 @@ module.exports = passport => {
   router.get('/admin', (req, res) => res.redirect('/admin/restaurants'))
   router.get('/admin/restaurants', adminCtrler.getRestaurants)
   router.get('/admin/restaurants/create', adminCtrler.createRestaurants)
-  router.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurants)
+  router.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurant)
   router.get('/admin/restaurants/:id', adminCtrler.getRestaurant)
   router.get('/admin/restaurants/:id/edit', adminCtrler.editRestaurant)
   router.put('/admin/restaurants/:id', upload.single('image'), adminCtrler.putRestaurant)

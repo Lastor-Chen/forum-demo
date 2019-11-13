@@ -7,6 +7,12 @@ module.exports = {
     )
   },
 
+  postRestaurant: async (req, res, cb) => {
+    adminService.postRestaurant(req, res,
+      result => res.json(result)
+    )
+  },
+
   getRestaurant: (req, res) => {
     adminService.getRestaurant(req, res, 
       restaurant => res.json(restaurant)

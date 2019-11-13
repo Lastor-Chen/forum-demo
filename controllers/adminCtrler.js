@@ -26,30 +26,18 @@ module.exports = {
       })
   },
 
-  postRestaurants: async (req, res) => {
-    if (!req.body.name) {
-      req.flash('error', "name didn't exist")
-      return res.redirect('back')
-    }
+  postRestaurant: async (req, res) => {
+    adminService.postRestaurant(req, res,
+      result => {
+        if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
 
-    const input = req.body
-    const { file } = req
+        req.flash(result.status, result.message)
+        if (result.status === 'error') return res.redirect('back')
 
-    if (file) {
-      imgur.setClientId(IMGUR_CLIENT_ID)
-      try { 
-        const img = await imgur.uploadFile(file.path)
-        input.image = img.data.link
-      }
-      catch (err) { console.error(err) }
-    } 
-    
-    Restaurant.create(input)
-      .then(restaurant => {
-        req.flash('success', 'restaurant was successfully created')
+        // success
         res.redirect('/admin/restaurants')
-      })
-      .catch(err => res.status(422).json(err))
+      }
+    )
   },
 
   getRestaurant: (req, res) => {
