@@ -13,6 +13,10 @@ module.exports = {
     adminService.getRestaurant(req, res, restaurant => res.json(restaurant))
   },
 
+  putRestaurant: async (req, res) => {
+    adminService.putRestaurant(req, res, result => res.json(result))
+  },
+
   deleteRestaurant: (req, res) => {
     adminService.deleteRestaurant(req, res, result => res.json(result))
   }

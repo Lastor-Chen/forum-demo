@@ -9,6 +9,7 @@ const upload = multer({ dest: 'temp/' })
 router.get('/admin/restaurants', adminCtrler.getRestaurants)
 router.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurant)
 router.get('/admin/restaurants/:id', adminCtrler.getRestaurant)
+router.put('/admin/restaurants/:id', upload.single('image'), adminCtrler.putRestaurant)
 router.delete('/admin/restaurants/:id', adminCtrler.deleteRestaurant)
 
 router.get('/admin/categories', cateCtrler.getCategories)
