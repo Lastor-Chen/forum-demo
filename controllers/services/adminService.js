@@ -21,5 +21,14 @@ module.exports = {
       cb(restaurant)
 
     } catch (err) { res.status(422).json(err) }
-  }
+  },
+
+  deleteRestaurant: async (req, res, cb) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      await restaurant.destroy()
+      cb({ status: 'success', message: 'restaurant was successfully deleted' })
+
+    } catch (err) { cb({ status: 'error', message: err.toString() }) }
+  },
 }

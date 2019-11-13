@@ -4,6 +4,7 @@ const User = db.User
 const Category = db.Category
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+const { BAD_GATEWAY } = require('http-status-codes')
 
 const adminService = require('./services/adminService.js')
 
@@ -92,17 +93,15 @@ module.exports = {
     catch (err) { res.status(422).json(err) }
   },
 
-  deleteRestaurant: (req, res) => {
-    Restaurant.findByPk(req.params.id)
-      .then(restaurant => {
-        restaurant.destroy()
-          .then(restaurant => { 
-            req.flash('success', 'restaurant was successfully deleted')
-            res.redirect('/admin/restaurants') 
-          })
-          .catch(err => res.status(422).json(err))
-      })
-      .catch(err => res.status(422).json(err))
+  deleteRestaurant: async (req, res) => {
+    adminService.deleteRestaurant(req, res, 
+      result => {
+        if (result.status === 'error') return res.status(BAD_GATEWAY).json(result)
+
+        req.flash(result.status, result.message)
+        res.redirect('/admin/restaurants') 
+      }
+    )
   },
 
   getUsers: (req, res) => {
