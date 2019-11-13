@@ -10,13 +10,11 @@ const adminService = require('./services/adminService.js')
 
 module.exports = {
   getRestaurants: (req, res) => {
-    adminService.getRestaurants(req, res, 
-      restaurants => {
-        if (restaurants.status === 'error') return res.status(BAD_GATEWAY).json(restaurants)
-        
-        res.render('admin/restaurants', { restaurants })
-      }
-    )
+    adminService.getRestaurants(req, res, restaurants => {
+      if (restaurants.status === 'error') return res.status(BAD_GATEWAY).json(restaurants)
+
+      res.render('admin/restaurants', { restaurants })
+    })
   },
 
   createRestaurants: (req, res) => {
@@ -27,27 +25,23 @@ module.exports = {
   },
 
   postRestaurant: async (req, res) => {
-    adminService.postRestaurant(req, res,
-      result => {
-        if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
+    adminService.postRestaurant(req, res, result => {
+      if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
 
-        req.flash(result.status, result.message)
-        if (result.status === 'error') return res.redirect('back')
+      req.flash(result.status, result.message)
+      if (result.status === 'error') return res.redirect('back')
 
-        // success
-        res.redirect('/admin/restaurants')
-      }
-    )
+      // success
+      res.redirect('/admin/restaurants')
+    })
   },
 
   getRestaurant: (req, res) => {
-    adminService.getRestaurant(req, res,
-      restaurant => {
-        if (restaurant.status === 'error') return res.status(BAD_GATEWAY).json(restaurant)
+    adminService.getRestaurant(req, res, restaurant => {
+      if (restaurant.status === 'error') return res.status(BAD_GATEWAY).json(restaurant)
 
-        res.render('admin/restaurant', { restaurant })
-      }
-    )
+      res.render('admin/restaurant', { restaurant })
+    })
   },
 
   editRestaurant: async (req, res) => {
@@ -90,14 +84,12 @@ module.exports = {
   },
 
   deleteRestaurant: async (req, res) => {
-    adminService.deleteRestaurant(req, res, 
-      result => {
-        if (result.status === 'error') return res.status(BAD_GATEWAY).json(result)
+    adminService.deleteRestaurant(req, res, result => {
+      if (result.status === 'error') return res.status(BAD_GATEWAY).json(result)
 
-        req.flash(result.status, result.message)
-        res.redirect('/admin/restaurants') 
-      }
-    )
+      req.flash(result.status, result.message)
+      res.redirect('/admin/restaurants') 
+    })
   },
 
   getUsers: (req, res) => {
