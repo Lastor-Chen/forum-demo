@@ -22,19 +22,15 @@ module.exports = {
   },
 
   putCategory: async (req, res) => {
-    if (!req.body.name) {
-      req.flash('error', 'name did not exist')
-      return res.redirect('back')
-    }
+    cateService.putCategory(req, res, result => {
+      if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
 
-    try {
-      const category = await Category.findByPk(req.params.id)
-      await category.update(req.body)
+      req.flash(result.status, result.message)
+      if (result.status === 'error') return res.redirect('back')
 
-      req.flash('success', 'category was successfully updated')
+      // success
       res.redirect('/admin/categories')
-    }
-    catch (err) { res.status(422).json(err.toString()) }
+    })
   },
 
   deleteCategory: async (req, res) =>{

@@ -29,4 +29,19 @@ module.exports = {
       cb({ status: 'serverError', message: err.toString() })
     }
   },
+
+  putCategory: async (req, res, cb) => {
+    try {
+      if (!req.body.name) return cb({ status: 'error', message: 'name did not exist' })
+
+      const category = await Category.findByPk(req.params.id)
+      const result = await category.update(req.body)
+
+      cb({ status: 'success', message: 'category was successfully updated', result })
+
+    } catch (err) {
+      console.error(err.toString())
+      cb({ status: 'serverError', message: err.toString() })
+    }
+  },
 }

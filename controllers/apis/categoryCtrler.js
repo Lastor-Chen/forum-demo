@@ -10,4 +10,8 @@ module.exports = {
   postCategory: (req, res) => {
     cateService.postCategory(req, res, result => res.json(result))
   },
+
+  putCategory: (req, res) => {
+    cateService.putCategory(req, res, result => res.json(result))
+  }
 }
