@@ -9,6 +9,24 @@ module.exports = {
       if (cateId) { category = categories.find(item => item.id === cateId) }
 
       cb(categories, category)
-    } catch (err) { res.status(BAD_GATEWAY).send(err.toString()) }
-  }
+
+    } catch (err) {
+      console.error(err.toString())
+      cb({ status: 'serverError', message: err.toString() }) 
+    }
+  },
+
+  postCategory: async (req, res, cb) => {
+    try {
+      const name = req.body.name
+      if (!name) return cb({ status: 'error', message: 'name did not exist'})
+
+      const category = await Category.create({ name })
+      cb({ status: 'success', message: 'category was successfully created', category })
+
+    } catch (err) {
+      console.error(err.toString())
+      cb({ status: 'serverError', message: err.toString() })
+    }
+  },
 }

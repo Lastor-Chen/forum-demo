@@ -5,5 +5,9 @@ module.exports = {
     cateService.getCategories(req, res, 
       (categories, category) => res.json({ categories, category })
     )
-  }
+  },
+
+  postCategory: (req, res) => {
+    cateService.postCategory(req, res, result => res.json(result))
+  },
 }

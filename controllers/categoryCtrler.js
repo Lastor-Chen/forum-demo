@@ -1,5 +1,6 @@
 const Category = require('../models').Category
 const cateService = require('./services/categoryService.js')
+const { BAD_GATEWAY } = require('http-status-codes')
 
 module.exports = {
   getCategories: (req, res) => {
@@ -9,18 +10,15 @@ module.exports = {
   },
 
   postCategory: (req, res) => {
-    const name = req.body.name
-    if (!name) {
-      req.flash('error', 'name did not exist')
-      return res.redirect('back')
-    }
+    cateService.postCategory(req, res, result => {
+      if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
 
-    Category.create({ name })
-      .then(category => {
-        req.flash('success', 'category was successfully created')
-        res.redirect('/admin/categories')
-      })
-      .catch(err => res.status(422).json(err))
+      req.flash(result.status, result.message)
+      if (result.status === 'error') return res.redirect('back')
+
+      // success
+      res.redirect('/admin/categories')
+    })
   },
 
   putCategory: async (req, res) => {
