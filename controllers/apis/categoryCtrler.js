@@ -13,5 +13,9 @@ module.exports = {
 
   putCategory: (req, res) => {
     cateService.putCategory(req, res, result => res.json(result))
+  },
+
+  deleteCategory: (req, res) => {
+    cateService.deleteCategory(req, res, result => res.json(result))
   }
 }

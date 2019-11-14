@@ -44,4 +44,16 @@ module.exports = {
       cb({ status: 'serverError', message: err.toString() })
     }
   },
+
+  deleteCategory: async (req, res, cb) => {
+    try {
+      const category = await Category.findByPk(req.params.id)
+      const result = await category.destroy()
+      cb({ status: 'success', message: 'category was successfully deleted', result })
+    }
+    catch (err) {
+      console.error(err.toString())
+      cb({ status: 'serverError', message: err.toString() })
+    }
+  }
 }
