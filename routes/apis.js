@@ -5,8 +5,11 @@ const userCtrler = require('../controllers/apis/userCtrler.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
+// custom module
+const { authenticate, isAuthedAdmin } = require('../middleware/api_auth.js')
 
 // 路由開頭 '/api'
+router.use('/admin', authenticate, isAuthedAdmin)
 router.get('/admin/restaurants', adminCtrler.getRestaurants)
 router.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurant)
 router.get('/admin/restaurants/:id', adminCtrler.getRestaurant)

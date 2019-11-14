@@ -1,3 +1,5 @@
+if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
+
 const express = require('express')
 const exphbs = require('express-handlebars')
 const flash = require('connect-flash')
@@ -7,8 +9,6 @@ const methodOverride = require('method-override')
 const app = express()
 const PORT = process.env.PORT || 3000
 const HOST = process.env.HOSTNAME || 'localhost'
-
-if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
 
 app.engine('hbs', exphbs({ 
   extname: 'hbs',
