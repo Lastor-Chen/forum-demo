@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const adminCtrler = require('../controllers/apis/adminCtrler.js')
 const cateCtrler = require('../controllers/apis/categoryCtrler.js')
+const userCtrler = require('../controllers/apis/userCtrler.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
@@ -16,5 +17,7 @@ router.get('/admin/categories', cateCtrler.getCategories)
 router.post('/admin/categories', cateCtrler.postCategory)
 router.put('/admin/categories/:id', cateCtrler.putCategory)
 router.delete('/admin/categories/:id', cateCtrler.deleteCategory)
+
+router.post('/signin', userCtrler.signIn)
 
 module.exports = router
