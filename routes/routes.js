@@ -26,8 +26,8 @@ module.exports = passport => {
   router.post('/like/:RestaurantId', isAuthed, userCtrler.addLike)  //O
   router.delete('/like/:RestaurantId', isAuthed, userCtrler.removeLike)  //O
 
-  router.post('/comments', isAuthed, commentCtrler.postComment)
-  router.delete('/comments/:id', isAuthedAdmin, commentCtrler.deleteComment)
+  router.post('/comments', isAuthed, commentCtrler.postComment)  //O
+  router.delete('/comments/:id', isAuthedAdmin, commentCtrler.deleteComment) //O
 
   router.use('/users', isAuthed)  //X
   router.get('/users/top', userCtrler.getTopUser)  //O

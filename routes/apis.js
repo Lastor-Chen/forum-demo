@@ -3,6 +3,7 @@ const adminCtrler = require('../controllers/apis/adminCtrler.js')
 const cateCtrler = require('../controllers/apis/categoryCtrler.js')
 const userCtrler = require('../controllers/apis/userCtrler.js')
 const restCtrler = require('../controllers/apis/restCtrler.js')
+const commentCtrler = require('../controllers/apis/commentCtrler.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
@@ -22,6 +23,9 @@ router.delete('/favorite/:RestaurantId', authenticate, userCtrler.removeFavorite
 
 router.post('/like/:RestaurantId', authenticate, userCtrler.addLike)
 router.delete('/like/:RestaurantId', authenticate, userCtrler.removeLike)
+
+router.post('/comments', authenticate, commentCtrler.postComment)
+router.delete('/comments/:id', authenticate, isAuthedAdmin, commentCtrler.deleteComment)
 
 router.use('/users', authenticate)
 router.get('/users/top', userCtrler.getTopUser)
