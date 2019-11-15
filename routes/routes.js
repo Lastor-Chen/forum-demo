@@ -11,12 +11,14 @@ const upload = multer({ dest: 'temp/' })
 const { isAuthed, isAuthedAdmin } = require('../middleware/isAuth.js')
 
 module.exports = passport => {
-  router.get('/', isAuthed, (req, res) => res.redirect('/restaurants'))
-  router.get('/restaurants', isAuthed, restCtrler.getRestaurants)
-  router.get('/restaurants/feeds', isAuthed, restCtrler.getFeeds)
-  router.get('/restaurants/top', isAuthed, restCtrler.getTopRest)
-  router.get('/restaurants/:id', isAuthed, restCtrler.getRestaurant)
-  router.get('/restaurants/:id/dashboard', isAuthed, restCtrler.getDashboard)
+  router.get('/', isAuthed, (req, res) => res.redirect('/restaurants'))  //X
+
+  router.use('/restaurants', isAuthed)  //X
+  router.get('/restaurants', restCtrler.getRestaurants)  //O
+  router.get('/restaurants/feeds', restCtrler.getFeeds)  //O
+  router.get('/restaurants/top', restCtrler.getTopRest)  //O
+  router.get('/restaurants/:id', restCtrler.getRestaurant)  //O
+  router.get('/restaurants/:id/dashboard', restCtrler.getDashboard)  //O
 
   router.post('/favorite/:RestaurantId', isAuthed, userCtrler.addFavorite)
   router.delete('/favorite/:RestaurantId', isAuthed, userCtrler.removeFavorite)

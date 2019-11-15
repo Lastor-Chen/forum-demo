@@ -2,6 +2,7 @@ const router = require('express').Router()
 const adminCtrler = require('../controllers/apis/adminCtrler.js')
 const cateCtrler = require('../controllers/apis/categoryCtrler.js')
 const userCtrler = require('../controllers/apis/userCtrler.js')
+const restCtrler = require('../controllers/apis/restCtrler.js')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
@@ -9,6 +10,13 @@ const upload = multer({ dest: 'temp/' })
 const { authenticate, isAuthedAdmin } = require('../middleware/api_auth.js')
 
 // 路由開頭 '/api'
+router.use('/restaurants', authenticate)
+router.get('/restaurants', restCtrler.getRestaurants)
+router.get('/restaurants/feeds', restCtrler.getFeeds)
+router.get('/restaurants/top', restCtrler.getTopRest)
+router.get('/restaurants/:id', restCtrler.getRestaurant)
+router.get('/restaurants/:id/dashboard', restCtrler.getDashboard)
+
 router.use('/admin', authenticate, isAuthedAdmin)
 router.get('/admin/restaurants', adminCtrler.getRestaurants)
 router.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurant)
