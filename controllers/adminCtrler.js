@@ -4,7 +4,7 @@ const User = db.User
 const Category = db.Category
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
-const { BAD_GATEWAY } = require('http-status-codes')
+const { BAD_GATEWAY, INTERNAL_SERVER_ERROR } = require('http-status-codes')
 
 const adminService = require('./services/adminService.js')
 
@@ -24,7 +24,7 @@ module.exports = {
       })
   },
 
-  postRestaurant: async (req, res) => {
+  postRestaurant: (req, res) => {
     adminService.postRestaurant(req, res, result => {
       if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
 
@@ -53,7 +53,7 @@ module.exports = {
     catch (err) { res.status(422).json(err) }
   },
 
-  putRestaurant: async (req, res) => {
+  putRestaurant: (req, res) => {
     adminService.putRestaurant(req, res, result => {
       if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
 
@@ -65,7 +65,7 @@ module.exports = {
     })
   },
 
-  deleteRestaurant: async (req, res) => {
+  deleteRestaurant: (req, res) => {
     adminService.deleteRestaurant(req, res, result => {
       if (result.status === 'error') return res.status(BAD_GATEWAY).json(result)
 
@@ -75,20 +75,19 @@ module.exports = {
   },
 
   getUsers: (req, res) => {
-    User.findAll({ order: [['id', 'ASC']] })
-      .then(users => res.render('admin/users', { users }))
-      .catch(err => res.status(422).json(err))
+    adminService.getUsers(req, res, users => {
+      if (users.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(users)
+      
+      res.render('admin/users', { users })
+    })
   },
 
-  putUsers: async (req ,res) => {
-    try {
-      const user = await User.findByPk(req.params.id)
-      user.isAdmin = !user.isAdmin
+  putUser: (req ,res) => {
+    adminService.putUser(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
 
-      await user.save()
-      req.flash('success', 'user was successfully updated')
+      req.flash(result.status, result.message)
       res.redirect('/admin/users')
-    }
-    catch (err) { res.status(422).json(err) }
+    })
   }
 }

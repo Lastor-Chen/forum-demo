@@ -16,8 +16,12 @@ router.get('/admin/restaurants/:id', adminCtrler.getRestaurant)
 router.put('/admin/restaurants/:id', upload.single('image'), adminCtrler.putRestaurant)
 router.delete('/admin/restaurants/:id', adminCtrler.deleteRestaurant)
 
+router.get('/admin/users', adminCtrler.getUsers)
+router.put('/admin/users/:id', adminCtrler.putUser)
+
 router.get('/admin/categories', cateCtrler.getCategories)
 router.post('/admin/categories', cateCtrler.postCategory)
+router.get('/admin/categories/:id', cateCtrler.getCategories)
 router.put('/admin/categories/:id', cateCtrler.putCategory)
 router.delete('/admin/categories/:id', cateCtrler.deleteCategory)
 

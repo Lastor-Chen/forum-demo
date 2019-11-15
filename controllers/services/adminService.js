@@ -89,4 +89,29 @@ module.exports = {
       cb({ status: 'error', message: err.toString() }) 
     }
   },
+
+  getUsers: async (req, res, cb) => {
+    try {
+      const users = await User.findAll({ order: [['id', 'ASC']] })
+      cb(users)
+
+    } catch (err) { 
+      console.error(err.toString())
+      cb({ status: 'serverError', message: err.toString() })
+    }
+  },
+
+  putUser: async (req, res, cb) => {
+    try {
+      const user = await User.findByPk(req.params.id)
+      user.isAdmin = !user.isAdmin
+
+      await user.save()
+      cb({ status: 'success', message: 'user was successfully updated', user })
+
+    } catch (err) { 
+      console.error(err.toString())
+      cb({ status: 'serverError', message: err.toString() })
+    }
+  }
 }

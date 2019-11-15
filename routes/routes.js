@@ -35,29 +35,29 @@ module.exports = passport => {
   router.post('/following/:userId', isAuthed, userCtrler.addFollowing)
   router.delete('/following/:userId', isAuthed, userCtrler.removeFollowing)
 
-  router.use('/admin', isAuthedAdmin)
-  router.get('/admin', (req, res) => res.redirect('/admin/restaurants'))
-  router.get('/admin/restaurants', adminCtrler.getRestaurants)
-  router.get('/admin/restaurants/create', adminCtrler.createRestaurants)
-  router.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurant)
-  router.get('/admin/restaurants/:id', adminCtrler.getRestaurant)
-  router.get('/admin/restaurants/:id/edit', adminCtrler.editRestaurant)
-  router.put('/admin/restaurants/:id', upload.single('image'), adminCtrler.putRestaurant)
-  router.delete('/admin/restaurants/:id', adminCtrler.deleteRestaurant)
-  router.get('/admin/users', adminCtrler.getUsers)
-  router.put('/admin/users/:id', adminCtrler.putUsers)
-  router.get('/admin/categories', cateCtrler.getCategories)
-  router.post('/admin/categories', cateCtrler.postCategory)
-  router.get('/admin/categories/:id', cateCtrler.getCategories)
-  router.put('/admin/categories/:id', cateCtrler.putCategory)
-  router.delete('/admin/categories/:id', cateCtrler.deleteCategory)
+  router.use('/admin', isAuthedAdmin)  //X
+  router.get('/admin', (req, res) => res.redirect('/admin/restaurants'))  //X
+  router.get('/admin/restaurants', adminCtrler.getRestaurants)  //O
+  router.get('/admin/restaurants/create', adminCtrler.createRestaurants)  //X
+  router.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurant)  //O
+  router.get('/admin/restaurants/:id', adminCtrler.getRestaurant)  //O
+  router.get('/admin/restaurants/:id/edit', adminCtrler.editRestaurant)  //X
+  router.put('/admin/restaurants/:id', upload.single('image'), adminCtrler.putRestaurant)  //O
+  router.delete('/admin/restaurants/:id', adminCtrler.deleteRestaurant)  //O
+  router.get('/admin/users', adminCtrler.getUsers)  // O
+  router.put('/admin/users/:id', adminCtrler.putUser)  //O
+  router.get('/admin/categories', cateCtrler.getCategories)  //O
+  router.post('/admin/categories', cateCtrler.postCategory)  //O
+  router.get('/admin/categories/:id', cateCtrler.getCategories)  //O
+  router.put('/admin/categories/:id', cateCtrler.putCategory)  //O
+  router.delete('/admin/categories/:id', cateCtrler.deleteCategory)  //O
 
-  router.get('/signup', userCtrler.signUpPage)
-  router.post('/signup', userCtrler.signUp)
+  router.get('/signup', userCtrler.signUpPage)  //X
+  router.post('/signup', userCtrler.signUp)  //O
 
-  router.get('/signin', userCtrler.signInPage)
-  router.post('/signin', userCtrler.signIn.bind(null, passport))
-  router.get('/logout', userCtrler.logout)
+  router.get('/signin', userCtrler.signInPage)  //X
+  router.post('/signin', userCtrler.signIn.bind(null, passport)) //O
+  router.get('/logout', userCtrler.logout)  //X
 
   return router
 }
