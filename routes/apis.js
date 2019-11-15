@@ -22,5 +22,6 @@ router.put('/admin/categories/:id', cateCtrler.putCategory)
 router.delete('/admin/categories/:id', cateCtrler.deleteCategory)
 
 router.post('/signin', userCtrler.signIn)
+router.post('/signup', userCtrler.signUp)
 
 module.exports = router

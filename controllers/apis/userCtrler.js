@@ -26,5 +26,27 @@ module.exports = {
       console.error(err.toString())
       res.json({ status: 'serverError', message: err.toString() })
     }
+  },
+
+  signUp: async (req, res) => {
+    try {
+      const input = { ...req.body }
+
+      // 確認 password
+      if (input.passwordCheck !== input.password) return res.json({ status: 'error', message: '兩次密碼輸入不同' })
+
+      // 確認 email
+      const hasUser = await User.findOne({ where: { email: req.body.email } })
+      if (hasUser) return res.json({ status: 'error', message: '此 email 已被註冊'})
+
+      // 通過
+      input.password = bcrypt.hashSync(input.password, 10)
+      const newUser = await User.create(input)
+      res.json({ status: 'success', message: '成功註冊帳號！', newUser })
+    }
+    catch (err) {
+        console.error(err.toString())
+        res.json({ status: 'serverError', message: err.toString() })
+    }
   }
 }
