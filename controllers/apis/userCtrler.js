@@ -14,8 +14,10 @@ module.exports = {
 
       // 確認帳密
       const user = await User.findOne({ where: { email } })
+      if (!user) return res.status(UNAUTHORIZED).json({ status: 'error', message: 'email or password match failed' })
+      
       const isSuccess = bcrypt.compareSync(password, user.password)
-      if (!user || !isSuccess) return res.status(UNAUTHORIZED).json({ status: 'error', message: 'email or password match failed' })
+      if (!isSuccess) return res.status(UNAUTHORIZED).json({ status: 'error', message: 'email or password match failed' })
 
       // 通過
       const payload = { id: user.id }
