@@ -20,22 +20,23 @@ module.exports = passport => {
   router.get('/restaurants/:id', restCtrler.getRestaurant)  //O
   router.get('/restaurants/:id/dashboard', restCtrler.getDashboard)  //O
 
-  router.post('/favorite/:RestaurantId', isAuthed, userCtrler.addFavorite)
-  router.delete('/favorite/:RestaurantId', isAuthed, userCtrler.removeFavorite)
+  router.post('/favorite/:RestaurantId', isAuthed, userCtrler.addFavorite)  //O
+  router.delete('/favorite/:RestaurantId', isAuthed, userCtrler.removeFavorite)  //O
 
-  router.post('/like/:RestaurantId', isAuthed, userCtrler.addLike)
-  router.delete('/like/:RestaurantId', isAuthed, userCtrler.removeLike)
+  router.post('/like/:RestaurantId', isAuthed, userCtrler.addLike)  //O
+  router.delete('/like/:RestaurantId', isAuthed, userCtrler.removeLike)  //O
 
   router.post('/comments', isAuthed, commentCtrler.postComment)
   router.delete('/comments/:id', isAuthedAdmin, commentCtrler.deleteComment)
 
-  router.get('/users/top', isAuthed, userCtrler.getTopUser)
-  router.get('/users/:id', isAuthed, userCtrler.getUser)
-  router.get('/users/:id/edit', isAuthed, userCtrler.editUser)
-  router.put('/users/:id/', isAuthed, upload.single('image'), userCtrler.putUser)
+  router.use('/users', isAuthed)  //X
+  router.get('/users/top', userCtrler.getTopUser)  //O
+  router.get('/users/:id', userCtrler.getUser)  //O
+  router.get('/users/:id/edit', userCtrler.editUser)  //X
+  router.put('/users/:id', upload.single('image'), userCtrler.putUser)  //O
 
-  router.post('/following/:userId', isAuthed, userCtrler.addFollowing)
-  router.delete('/following/:userId', isAuthed, userCtrler.removeFollowing)
+  router.post('/following/:userId', isAuthed, userCtrler.addFollowing)  //O
+  router.delete('/following/:userId', isAuthed, userCtrler.removeFollowing)  //O
 
   router.use('/admin', isAuthedAdmin)  //X
   router.get('/admin', (req, res) => res.redirect('/admin/restaurants'))  //X

@@ -4,6 +4,8 @@ const User = db.User
 const { BAD_REQUEST, UNAUTHORIZED } = require('http-status-codes')
 const jwt = require('jsonwebtoken')
 
+const userService = require('../services/userService.js')
+
 module.exports = {
   signIn: async (req, res) => {
     try {
@@ -50,5 +52,41 @@ module.exports = {
         console.error(err.toString())
         res.json({ status: 'serverError', message: err.toString() })
     }
+  },
+
+  getUser: (req, res) => {
+    userService.getUser(req, res, result => res.json(result))
+  },
+
+  putUser: (req, res) => {
+    userService.putUser(req, res, result => res.json(result))
+  },
+
+  addFavorite: (req, res) => {
+    userService.addFavorite(req, res, result => res.json(result))
+  },
+
+  removeFavorite: (req, res) => {
+    userService.removeFavorite(req, res, result => res.json(result))
+  },
+
+  addLike: (req, res) => {
+    userService.addLike(req, res, result => res.json(result))
+  },
+
+  removeLike: (req, res) => {
+    userService.removeLike(req, res, result => res.json(result))
+  },
+
+  getTopUser: (req, res) => {
+    userService.getTopUser(req, res, result => res.json(result))
+  },
+
+  addFollowing: (req, res) => {
+    userService.addFollowing(req, res, result => res.json(result))
+  },
+
+  removeFollowing: (req, res) => {
+    userService.removeFollowing(req, res, result => res.json(result))
   }
 }

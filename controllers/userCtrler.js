@@ -9,6 +9,9 @@ const Like = db.Like
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
+const { INTERNAL_SERVER_ERROR } = require('http-status-codes')
+const userService = require('./services/userService.js')
+
 // custom module
 const { checkSignUp } = require('../lib/checkForm.js')
 
@@ -61,50 +64,11 @@ module.exports = {
     res.redirect('signin')
   },
 
-  getUser: async (req, res) => {
-    try {
-      const UserId = +req.params.id   // 被瀏覽者id
-      const operatorId = req.user.id    // 使用者id
-      const isOwner = (operatorId === UserId)
-  
-      // 一齊 Query，showedUser 為 "被瀏覽者"
-      const [comments, showedUser] = await Promise.all([
-        Comment.findAll({ where: { UserId }, include: Restaurant }),
-        User.findByPk(UserId, { include: { all: true, nested: false } })
-      ])
-
-      // following
-      const following = {
-        users: showedUser.Followings,
-        count: showedUser.Followings.length
-      }
-
-      // follower
-      const follower = {
-        users: showedUser.Followers,
-        count: showedUser.Followers.length
-      }
-      const isFollowed = follower.users.some(user => user.id === operatorId)
-
-      // 收藏的餐廳
-      const favRestaurant = {
-        restaurants: showedUser.FavoriteRestaurants,
-        count: showedUser.FavoriteRestaurants.length
-      }
-
-      // 已評論餐廳
-      const uniqRests = comments.filter((comment, index, self) =>  // 去除重複評論的餐廳
-        index === self.findIndex(refItem => (
-          comment.Restaurant.id === refItem.Restaurant.id
-        ))
-      )
-      const comment = {
-        comments: uniqRests,
-        count: uniqRests.length 
-      }
-
-      res.render('user', { css: 'user', showedUser, isOwner, isFollowed, following, follower, comment, favRestaurant })
-    } catch (err) { res.status(422).json(err.toString()) }
+  getUser: (req, res) => {
+    userService.getUser(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
+      res.render('user', result)
+    })
   },
 
   editUser: (req, res) => {
@@ -115,105 +79,63 @@ module.exports = {
     res.render('editUser')
   },
 
-  putUser: async (req, res) => {
-    let error = ''
-    if (!req.body.name) { error = 'Name 不得為空' }
-    if (+req.params.id !== req.user.id) { error = '未具有相關權限' }
-    if (error) return res.render('editUser', { error })
+  putUser: (req, res) => {
+    userService.putUser(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
 
-    const input = req.body
-    const { file } = req
-    if (file) {
-      imgur.setClientId(IMGUR_CLIENT_ID)
-      try {
-        const img = await imgur.uploadFile(file.path)
-        input.image = img.data.link
-      } catch (err) { console.error(err) }
-    }
-
-    try {
-      const user = await User.findByPk(req.user.id)
-      await user.update(input)
-      req.flash('success', 'user profile was successfully updated')
-      res.redirect(`/users/${req.user.id}`)
-    } catch (err) { res.status(422).json(err.toString()) }
-  },
-
-  addFavorite: (req, res) => {
-    Favorite.create({
-      UserId: req.user.id,
-      RestaurantId: req.params.RestaurantId
-    })
-    .then(favorite => res.redirect('back'))
-    .catch(err => res.status(422).json(err.toString()))
-  },
-
-  removeFavorite: async (req, res) => {
-    try {
-      const favorite = await Favorite.findOne({ where: {
-        UserId: req.user.id,
-        RestaurantId: req.params.RestaurantId
-      }})
+      req.flash(result.status, result.message)
+      if (result.message.includes('Name')) return res.redirect(`/users/${req.user.id}/edit`)
       
-      await favorite.destroy()
+      res.redirect(`/users/${req.user.id}`)
+    })
+  },
+  
+  addFavorite: (req, res) => {
+    userService.addFavorite(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
       res.redirect('back')
-    } catch (err) { res.status(422).json(err.toString()) }
+    })
+  },
+
+  removeFavorite: (req, res) => {
+    userService.removeFavorite(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
+      res.redirect('back')
+    })
   },
 
   addLike: (req, res) => {
-    Like.create({
-      UserId: req.user.id,
-      RestaurantId: req.params.RestaurantId
+    userService.addLike(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
+      res.redirect('back')
     })
-      .then(like => res.redirect('back'))
-      .catch(err => res.status(422).json(err.toString()))
   },
 
-  removeLike: async (req, res) => {
-    try {
-      const like = await Like.findOne({
-        where: {
-          UserId: req.user.id,
-          RestaurantId: req.params.RestaurantId
-        }
-      })
-
-      await like.destroy()
+  removeLike: (req, res) => {
+    userService.removeLike(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
       res.redirect('back')
-    } catch (err) { res.status(422).json(err.toString()) }
+    })
   },
 
   getTopUser: (req, res) => {
-    User.findAll({ include: 'Followers' })
-      .then(users => {
-        users = users.map(user => {
-          user.FollowerCount = user.Followers.length,
-          user.isFollowed = req.user.Followings.some(v => v.id === user.id)
-          return user
-        })
-        // 依 Follower數 排序
-        users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
-        res.render('topUsers', { css: 'topUsers', users })
-      })
-      .catch(err => res.status(422).json(err.toString()))
+    userService.getTopUser(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
+      res.render('topUsers', result)
+    })
   },
 
   addFollowing: (req, res) => {
-    Followship.create({
-      followerId: req.user.id,
-      followingId: req.params.userId
+    userService.addFollowing(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
+      res.redirect('back')
     })
-      .then(() => res.redirect('back'))
-      .catch(err => res.status(422).json(err.toString()))
   },
 
   removeFollowing: (req, res) => {
-    Followship.findOne({ where: {
-      followerId: req.user.id,
-      followingId: req.params.userId
-    }})
-      .then(followship => followship.destroy())
-      .then(() => res.redirect('back'))
-      .catch(err => res.status(422).json(err.toString()))
+    userService.removeFollowing(req, res, result => {
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
+      res.redirect('back')
+    })
   }
 }

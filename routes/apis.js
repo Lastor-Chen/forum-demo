@@ -17,6 +17,20 @@ router.get('/restaurants/top', restCtrler.getTopRest)
 router.get('/restaurants/:id', restCtrler.getRestaurant)
 router.get('/restaurants/:id/dashboard', restCtrler.getDashboard)
 
+router.post('/favorite/:RestaurantId', authenticate, userCtrler.addFavorite)
+router.delete('/favorite/:RestaurantId', authenticate, userCtrler.removeFavorite)
+
+router.post('/like/:RestaurantId', authenticate, userCtrler.addLike)
+router.delete('/like/:RestaurantId', authenticate, userCtrler.removeLike)
+
+router.use('/users', authenticate)
+router.get('/users/top', userCtrler.getTopUser)
+router.get('/users/:id', userCtrler.getUser)
+router.put('/users/:id', upload.single('image'), userCtrler.putUser)
+
+router.post('/following/:userId', authenticate, userCtrler.addFollowing)
+router.delete('/following/:userId', authenticate, userCtrler.removeFollowing)
+
 router.use('/admin', authenticate, isAuthedAdmin)
 router.get('/admin/restaurants', adminCtrler.getRestaurants)
 router.post('/admin/restaurants', upload.single('image'), adminCtrler.postRestaurant)
