@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs')
 const db = require('../../models')
 const User = db.User
 const Comment = db.Comment
@@ -8,9 +7,6 @@ const Followship = db.Followship
 const Like = db.Like
 const imgur = require('imgur')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
-
-// custom module
-const { checkSignUp } = require('../../lib/checkForm.js')
 
 module.exports = {
   getUser: async (req, res, cb) => {

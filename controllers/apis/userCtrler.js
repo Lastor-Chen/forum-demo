@@ -49,8 +49,8 @@ module.exports = {
       res.json({ status: 'success', message: '成功註冊帳號！', newUser })
     }
     catch (err) {
-        console.error(err.toString())
-        res.json({ status: 'serverError', message: err.toString() })
+      console.error(err.toString())
+      res.json({ status: 'serverError', message: err.toString() })
     }
   },
 

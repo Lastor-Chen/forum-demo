@@ -8,7 +8,7 @@ module.exports = {
       let category = null
       if (cateId) { category = categories.find(item => item.id === cateId) }
 
-      cb(categories, category)
+      cb({ categories, category })
 
     } catch (err) {
       console.error(err.toString())

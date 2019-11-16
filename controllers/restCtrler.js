@@ -1,15 +1,5 @@
-const sequelize = require('sequelize')
-const db = require('../models')
-const Restaurant = db.Restaurant
-const Category = db.Category
-const Comment = db.Comment
-const User = db.User
-
 const { INTERNAL_SERVER_ERROR } = require('http-status-codes')
 const restService = require('./services/restService.js')
-
-// restaurants 單頁資料筆數
-const pageLimit = 10
 
 module.exports = {
   getRestaurants: (req, res) => {

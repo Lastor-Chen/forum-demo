@@ -1,17 +1,16 @@
-const Category = require('../models').Category
 const cateService = require('./services/categoryService.js')
-const { BAD_GATEWAY } = require('http-status-codes')
+const { INTERNAL_SERVER_ERROR } = require('http-status-codes')
 
 module.exports = {
   getCategories: (req, res) => {
-    cateService.getCategories(req, res,
-      (categories, category) => res.render('admin/categories', { categories, category })
-    )
+    cateService.getCategories(req, res, result => {
+      res.render('admin/categories', result)
+    })
   },
 
   postCategory: (req, res) => {
     cateService.postCategory(req, res, result => {
-      if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
 
       req.flash(result.status, result.message)
       if (result.status === 'error') return res.redirect('back')
@@ -23,7 +22,7 @@ module.exports = {
 
   putCategory: async (req, res) => {
     cateService.putCategory(req, res, result => {
-      if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
 
       req.flash(result.status, result.message)
       if (result.status === 'error') return res.redirect('back')
@@ -35,7 +34,7 @@ module.exports = {
 
   deleteCategory: async (req, res) => {
     cateService.deleteCategory(req, res, result => {
-      if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
 
       // success
       req.flash(result.status, result.message)

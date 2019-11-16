@@ -1,17 +1,14 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
-const User = db.User
 const Category = db.Category
-const imgur = require('imgur')
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
-const { BAD_GATEWAY, INTERNAL_SERVER_ERROR } = require('http-status-codes')
+const { INTERNAL_SERVER_ERROR } = require('http-status-codes')
 
 const adminService = require('./services/adminService.js')
 
 module.exports = {
   getRestaurants: (req, res) => {
     adminService.getRestaurants(req, res, restaurants => {
-      if (restaurants.status === 'error') return res.status(BAD_GATEWAY).json(restaurants)
+      if (restaurants.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(restaurants)
 
       res.render('admin/restaurants', { restaurants })
     })
@@ -26,7 +23,7 @@ module.exports = {
 
   postRestaurant: (req, res) => {
     adminService.postRestaurant(req, res, result => {
-      if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
 
       req.flash(result.status, result.message)
       if (result.status === 'error') return res.redirect('back')
@@ -38,7 +35,7 @@ module.exports = {
 
   getRestaurant: (req, res) => {
     adminService.getRestaurant(req, res, restaurant => {
-      if (restaurant.status === 'error') return res.status(BAD_GATEWAY).json(restaurant)
+      if (restaurant.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(restaurant)
 
       res.render('admin/restaurant', { restaurant })
     })
@@ -46,16 +43,22 @@ module.exports = {
 
   editRestaurant: async (req, res) => {
     try {
-      const categories = await Category.findAll()
-      const restaurant = await Restaurant.findByPk(req.params.id)
+      const [categories, restaurant] = await Promise.all([
+        Category.findAll(),
+        Restaurant.findByPk(req.params.id)
+      ])
       res.render('admin/create', { restaurant, categories })
     }
-    catch (err) { res.status(422).json(err) }
+    catch (err) {
+      const message = err.toString()
+      console.error(message)
+      res.status(INTERNAL_SERVER_ERROR).json({ status: 'serverError', message }) 
+    }
   },
 
   putRestaurant: (req, res) => {
     adminService.putRestaurant(req, res, result => {
-      if (result.status === 'serverError') return res.status(BAD_GATEWAY).json(result)
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
 
       req.flash(result.status, result.message)
       if (result.status === 'error') return res.redirect('back')
@@ -67,7 +70,7 @@ module.exports = {
 
   deleteRestaurant: (req, res) => {
     adminService.deleteRestaurant(req, res, result => {
-      if (result.status === 'error') return res.status(BAD_GATEWAY).json(result)
+      if (result.status === 'serverError') return res.status(INTERNAL_SERVER_ERROR).json(result)
 
       req.flash(result.status, result.message)
       res.redirect('/admin/restaurants') 

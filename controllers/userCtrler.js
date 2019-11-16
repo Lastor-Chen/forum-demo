@@ -1,14 +1,6 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
-const Comment = db.Comment
-const Restaurant = db.Restaurant
-const Favorite = db.Favorite
-const Followship = db.Followship
-const Like = db.Like
-const imgur = require('imgur')
-const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
-
 const { INTERNAL_SERVER_ERROR } = require('http-status-codes')
 const userService = require('./services/userService.js')
 

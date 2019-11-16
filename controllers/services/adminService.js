@@ -13,7 +13,7 @@ module.exports = {
 
     } catch (err) { 
       console.error(err.toString())
-      cb({ status: 'error', message: err.toString() })
+      cb({ status: 'serverError', message: err.toString() })
     }
   },
 
@@ -48,7 +48,7 @@ module.exports = {
 
     } catch (err) { 
       console.error(err.toString())
-      cb({ status: 'error', message: err.toString() })
+      cb({ status: 'serverError', message: err.toString() })
     }
   },
 
@@ -86,7 +86,7 @@ module.exports = {
 
     } catch (err) { 
       console.error(err.toString())
-      cb({ status: 'error', message: err.toString() }) 
+      cb({ status: 'serverError', message: err.toString() }) 
     }
   },
 

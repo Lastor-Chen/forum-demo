@@ -1,6 +1,3 @@
-const db = require('../models')
-const Comment = db.Comment
-
 const { INTERNAL_SERVER_ERROR } = require('http-status-codes')
 const commentService = require('./services/commentService.js')
 
