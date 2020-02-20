@@ -11,7 +11,6 @@ Desktop.ini
 /temp
 /upload
 .env
-package-lock.json
 *.log
 *.gz
 # VScode
